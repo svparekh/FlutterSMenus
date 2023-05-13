@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -49,38 +51,45 @@ class SMenuItemButton<T> extends SMenuItem {
             : style?.bgColor ?? Theme.of(context).colorScheme.background,
       ),
       duration: Duration(milliseconds: 250),
-      child: TextButton.icon(
+      child: TextButton(
         onPressed: () {
           onPressed();
         },
-        icon: Flexible(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 2),
-            child: Icon(
-              icon,
-              color: isSelected
-                  ? style?.selectedAccentColor ??
-                      selectedIconColor ??
-                      Theme.of(context).colorScheme.onPrimary
-                  : style?.accentColor ??
-                      iconColor ??
-                      Theme.of(context).colorScheme.primary,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Icon(
+                icon,
+                color: isSelected
+                    ? style?.selectedAccentColor ??
+                        selectedIconColor ??
+                        Theme.of(context).colorScheme.onPrimary
+                    : style?.accentColor ??
+                        iconColor ??
+                        Theme.of(context).colorScheme.primary,
+              ),
             ),
-          ),
-        ),
-        label: Text(
-          title ?? '',
-          style: TextStyle(
-              color: isSelected
-                  ? style?.selectedAccentColor ??
-                      selectedTextColor ??
-                      Theme.of(context).colorScheme.onPrimary
-                  : style?.accentColor ??
-                      textColor ??
-                      Theme.of(context).colorScheme.primary),
-          overflow: TextOverflow.fade,
-          maxLines: 1,
-          softWrap: false,
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Text(
+                  title ?? '',
+                  style: TextStyle(
+                      color: isSelected
+                          ? style?.selectedAccentColor ??
+                              selectedTextColor ??
+                              Theme.of(context).colorScheme.onPrimary
+                          : style?.accentColor ??
+                              textColor ??
+                              Theme.of(context).colorScheme.primary),
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  softWrap: false,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

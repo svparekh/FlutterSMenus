@@ -122,13 +122,19 @@ class SSideMenu extends StatefulWidget {
     this.controller,
     this.enableSelector = true,
     this.style = const SSideMenuStyle(),
+    this.headerAlignment,
+    this.footerAlignment,
+    this.scrollPhysics,
   }) : super(key: key);
   final SSideMenuStyle? style;
   final SMenuController? controller;
   final List<SMenuItem> items;
   final Widget? header;
+  final MainAxisAlignment? headerAlignment;
   final Widget? footer;
+  final MainAxisAlignment? footerAlignment;
   final bool enableSelector;
+  final ScrollPhysics? scrollPhysics;
 
   @override
   State<SSideMenu> createState() => _SSideMenuState();
@@ -209,7 +215,7 @@ class _SSideMenuState extends State<SSideMenu> {
         selectedIndex = widget.items.indexOf(item);
       }
     }
-    var align;
+    AlignmentDirectional align;
     if (widget.style?.position == SSideMenuPosition.top) {
       align = AlignmentDirectional.bottomCenter;
     } else if (widget.style?.position == SSideMenuPosition.right) {
@@ -223,66 +229,86 @@ class _SSideMenuState extends State<SSideMenu> {
     return Stack(
       alignment: align,
       children: [
-        AnimatedContainer(
-          decoration: BoxDecoration(
-              color: widget.style?.backgroundColor ??
-                  Theme.of(context).colorScheme.background,
-              borderRadius: widget.style?.borderRadius),
-          padding: widget.style?.padding ?? EdgeInsets.symmetric(horizontal: 5),
-          duration: Duration(milliseconds: 250),
-          constraints: widget.style?.constraints ??
-              (((widget.style?.position == SSideMenuPosition.top) ||
-                      (widget.style?.position == SSideMenuPosition.bottom))
-                  ? BoxConstraints(minHeight: 50, maxHeight: 250)
-                  : BoxConstraints(minWidth: 50, maxWidth: 250)),
-          width: (widget.style?.position == SSideMenuPosition.left ||
-                  widget.style?.position == SSideMenuPosition.right)
-              ? controller.size.value
-              : null,
-          height: (widget.style?.position == SSideMenuPosition.top ||
-                  widget.style?.position == SSideMenuPosition.bottom)
-              ? controller.size.value
-              : null,
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+        Padding(
+          padding: EdgeInsets.only(
+              right: widget.style?.position == SSideMenuPosition.left ? 3 : 0),
+          child: AnimatedContainer(
+            decoration: BoxDecoration(
+                color: widget.style?.backgroundColor ??
+                    Theme.of(context).colorScheme.background,
+                borderRadius: widget.style?.borderRadius),
+            padding: widget.style?.padding ??
+                const EdgeInsets.symmetric(horizontal: 5),
+            duration: const Duration(milliseconds: 250),
+            constraints: widget.style?.constraints ??
+                (((widget.style?.position == SSideMenuPosition.top) ||
+                        (widget.style?.position == SSideMenuPosition.bottom))
+                    ? const BoxConstraints(minHeight: 50, maxHeight: 250)
+                    : const BoxConstraints(minWidth: 50, maxWidth: 250)),
+            width: (widget.style?.position == SSideMenuPosition.left ||
+                    widget.style?.position == SSideMenuPosition.right)
+                ? controller.size.value
+                : null,
+            height: (widget.style?.position == SSideMenuPosition.top ||
+                    widget.style?.position == SSideMenuPosition.bottom)
+                ? controller.size.value
+                : null,
+            child: Column(children: [
+              if (widget.header != null)
+                Row(
+                  mainAxisAlignment:
+                      widget.headerAlignment ?? MainAxisAlignment.center,
                   children: [
-                    widget.header ?? Container(),
-                    Stack(
-                      children: [
-                        Column(
-                          children: widget.items,
-                        ),
-                        // Moving bar to indicate page number
-                        if (widget.enableSelector && widget.items.isNotEmpty)
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 250),
-                            padding: EdgeInsets.only(
-                                left: 1, top: 15 + (selectedIndex * 50)),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: widget.style?.barColor ??
-                                      Theme.of(context).colorScheme.onPrimary),
-                              height: 25,
-                              width: 5,
-                            ),
-                          )
-                      ],
-                    ),
+                    Flexible(child: widget.header!),
                   ],
                 ),
-                widget.footer ??
-                    Container(
-                      child: TextButton(
-                        child: Text('T'),
-                        onPressed: () {
-                          _toggleMenu();
-                        },
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Stack(
+                    children: [
+                      Column(
+                        children: widget.items,
                       ),
-                    )
-              ]),
+                      // Moving bar to indicate page number
+                      if (widget.enableSelector && widget.items.isNotEmpty)
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          padding: EdgeInsets.only(
+                              left: 1, top: 15 + (selectedIndex * 50)),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: widget.style?.barColor ??
+                                    Theme.of(context).colorScheme.onPrimary),
+                            height: 25,
+                            width: 5,
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+              ),
+              // Footer
+              // if (widget.footer != null)
+              Row(
+                mainAxisAlignment:
+                    widget.footerAlignment ?? MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: widget.footer ??
+                        Container(
+                          child: TextButton(
+                            child: const Text('T'),
+                            onPressed: () {
+                              _toggleMenu();
+                            },
+                          ),
+                        ),
+                  ),
+                ],
+              )
+            ]),
+          ),
         ),
         if (widget.style?.position != null &&
             widget.style?.position is SSideMenuPosition)
@@ -495,7 +521,6 @@ class SDropdownMenuCascade<T> extends SDropdownMenu<T> {
     final Widget? footer,
     final bool? showSelected,
     final bool? isSmall,
-    final bool? autoIsSmall,
     this.buttonStyle = const SMenuItemStyle(),
   }) : super(
             key: key,
@@ -510,7 +535,6 @@ class SDropdownMenuCascade<T> extends SDropdownMenu<T> {
             header: header,
             footer: footer,
             showSelected: showSelected,
-            autoIsSmall: autoIsSmall,
             isSmall: isSmall);
   final SMenuItemStyle? buttonStyle;
   @override
@@ -521,7 +545,6 @@ class SDropdownMenuCascade<T> extends SDropdownMenu<T> {
 class _SDropdownMenuCascadeState<T>
     extends SDropdownMenuState<SDropdownMenuCascade<T>>
     with TickerProviderStateMixin {
-  bool? _isSmall;
   OverlayEntry? _overlayEntry;
   int _currentIndex = -1;
   GlobalKey renderKey = GlobalKey();
@@ -553,15 +576,6 @@ class _SDropdownMenuCascadeState<T>
     }
   }
 
-  void _updateIsSmall(double newWidth) {
-    setState(() {
-      controller.size.value = newWidth;
-      if (newWidth < 60 && (widget.autoIsSmall ?? false)) {
-        _isSmall = true;
-      }
-    });
-  }
-
   @override
   void initState() {
     if (widget.controller != null) {
@@ -576,10 +590,8 @@ class _SDropdownMenuCascadeState<T>
       setState(() {});
     });
 
-    _isSmall = widget.isSmall;
-
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200));
     _expandAnimation = CurvedAnimation(
       parent: _animationController!,
       curve: Curves.easeInOut,
@@ -613,7 +625,7 @@ class _SDropdownMenuCascadeState<T>
       child: OutlinedButton(
         key: renderKey,
         style: OutlinedButton.styleFrom(
-          padding: style?.padding ?? EdgeInsets.all(0),
+          padding: style?.padding ?? const EdgeInsets.all(0),
           backgroundColor:
               style?.bgColor ?? Theme.of(context).colorScheme.background,
           elevation: style?.elevation,
@@ -633,7 +645,7 @@ class _SDropdownMenuCascadeState<T>
                   : TextDirection.ltr,
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (!(_isSmall ?? true))
+            if (!(widget.isSmall ?? true))
               if ((!(widget.showSelected ?? false) || (_currentIndex == -1)) &&
                   (widget.child != null)) ...[
                 Flexible(child: widget.child!),
@@ -737,7 +749,6 @@ class SDropdownMenuMorph<T> extends SDropdownMenu<T> {
     final Widget? footer,
     final bool? showSelected,
     final bool? isSmall,
-    final bool? autoIsSmall,
   }) : super(
             key: key,
             hideIcon: hideIcon,
@@ -751,7 +762,6 @@ class SDropdownMenuMorph<T> extends SDropdownMenu<T> {
             header: header,
             footer: footer,
             showSelected: showSelected,
-            autoIsSmall: autoIsSmall,
             isSmall: isSmall);
   final SMenuItemStyle? itemStyle;
   @override
@@ -761,9 +771,7 @@ class SDropdownMenuMorph<T> extends SDropdownMenu<T> {
 class _SDropdownMenuMorphState<T>
     extends SDropdownMenuState<SDropdownMenuMorph<T>>
     with TickerProviderStateMixin {
-  int selectedIndex = 0;
   int _currentIndex = -1;
-  SMenuController controller = SMenuController(startSize: 50);
   GlobalKey renderKey = GlobalKey();
   Animation<double>? _rotateAnimation;
   AnimationController? _animationController;
@@ -772,7 +780,7 @@ class _SDropdownMenuMorphState<T>
     var result = await Navigator.push(
         context,
         SPopupMenuRoute(
-          animDuration: Duration(milliseconds: 500),
+          animDuration: const Duration(milliseconds: 500),
           bgColor: Colors.black12,
           dismissable: true,
           fullscreenDialog: false,
@@ -827,8 +835,8 @@ class _SDropdownMenuMorphState<T>
       setState(() {});
     });
 
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200));
     _rotateAnimation = Tween(begin: 0.0, end: 0.5).animate(CurvedAnimation(
       parent: _animationController!,
       curve: Curves.easeInOut,
@@ -854,7 +862,7 @@ class _SDropdownMenuMorphState<T>
           height: widget.itemStyle?.height,
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
-              padding: widget.itemStyle?.padding ?? EdgeInsets.all(0),
+              padding: widget.itemStyle?.padding ?? const EdgeInsets.all(0),
               backgroundColor: widget.itemStyle?.bgColor ??
                   Theme.of(context).colorScheme.background,
               elevation: widget.itemStyle?.elevation,
@@ -885,7 +893,7 @@ class _SDropdownMenuMorphState<T>
                   Flexible(
                     child: RotationTransition(
                       turns: _rotateAnimation!,
-                      child: widget.icon ?? Icon(Icons.abc),
+                      child: widget.icon ?? const Icon(Icons.abc),
                     ),
                   ),
               ],
