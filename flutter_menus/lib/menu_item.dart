@@ -53,17 +53,19 @@ class SMenuItemButton<T> extends SMenuItem {
         onPressed: () {
           onPressed();
         },
-        icon: Padding(
-          padding: const EdgeInsets.only(left: 2),
-          child: Icon(
-            icon,
-            color: isSelected
-                ? style?.selectedAccentColor ??
-                    selectedIconColor ??
-                    Theme.of(context).colorScheme.onPrimary
-                : style?.accentColor ??
-                    iconColor ??
-                    Theme.of(context).colorScheme.primary,
+        icon: Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 2),
+            child: Icon(
+              icon,
+              color: isSelected
+                  ? style?.selectedAccentColor ??
+                      selectedIconColor ??
+                      Theme.of(context).colorScheme.onPrimary
+                  : style?.accentColor ??
+                      iconColor ??
+                      Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
         label: Text(
@@ -109,6 +111,7 @@ class SMenuItemDropdown<T> extends SMenuItem {
     this.leading,
     this.title,
     this.trailing,
+    this.onPressed,
   }) : super(
           key: key,
           value: value,
@@ -117,16 +120,29 @@ class SMenuItemDropdown<T> extends SMenuItem {
   final Widget? leading;
   final Widget? title;
   final Widget? trailing;
+  final void Function()?
+      onPressed; // Leave null if this item is to be used in onChange of dropdown menu
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: ListTile(
-        tileColor: style?.bgColor,
-        leading: leading,
-        title: title,
-        trailing: trailing,
+    return SizedBox(
+      width: style?.width,
+      height: style?.height,
+      child: Material(
+        shape: style?.shape ??
+            RoundedRectangleBorder(
+                borderRadius: style?.borderRadius ?? BorderRadius.circular(15)),
+        color: style?.bgColor ?? Colors.white,
+        child: Padding(
+          padding: style?.padding ?? const EdgeInsets.all(5.0),
+          child: Row(
+            children: [
+              Flexible(child: leading ?? Container()),
+              Flexible(child: title ?? Container()),
+              Flexible(child: trailing ?? Container())
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -134,6 +150,7 @@ class SMenuItemDropdown<T> extends SMenuItem {
 
 class SMenuItemDropdownSelectable extends SMenuItem {
   const SMenuItemDropdownSelectable({
+    this.onPressed,
     Key? key,
     this.leading,
     this.title,
@@ -142,6 +159,7 @@ class SMenuItemDropdownSelectable extends SMenuItem {
   final Widget? leading;
   final Widget? title;
   final Widget? trailing;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +168,7 @@ class SMenuItemDropdownSelectable extends SMenuItem {
       margin: EdgeInsets.only(top: 5),
       duration: Duration(milliseconds: 250),
       child: ListTile(
+        onTap: onPressed,
         leading: leading,
         title: title,
         trailing: trailing,

@@ -8,12 +8,14 @@ class ResizeBar extends StatefulWidget {
       required this.menuController,
       this.color = const Color.fromARGB(255, 211, 211, 211),
       this.hoverColor = const Color.fromARGB(134, 33, 149, 243),
-      required this.position})
+      required this.position,
+      this.hoverSize})
       : super(key: key);
   final SMenuController menuController;
   final SSideMenuPosition position;
   final Color? color;
   final Color? hoverColor;
+  final double? hoverSize;
 
   @override
   State<ResizeBar> createState() => _ResizeBarState();
@@ -47,8 +49,8 @@ class _ResizeBarState extends State<ResizeBar> {
           color: isHover ? widget.hoverColor! : widget.color!,
           borderRadius: BorderRadius.circular(2)),
       duration: Duration(milliseconds: 250),
-      height: vert ? null : 3,
-      width: vert ? 3 : null,
+      height: vert ? null : (isHover ? widget.hoverSize ?? 5 : 3),
+      width: vert ? (isHover ? widget.hoverSize ?? 5 : 3) : null,
       child: MouseRegion(
         cursor: vert
             ? SystemMouseCursors.resizeLeftRight
@@ -65,17 +67,26 @@ class _ResizeBarState extends State<ResizeBar> {
         },
         child: GestureDetector(
           onHorizontalDragUpdate: (details) {
-            // direction, (0, 1] = right, [-1, 0) = left
-
-            final delta = (details.delta.dx);
-            print(delta);
-            final width = ((widget.position == SSideMenuPosition.left) ||
-                    (widget.position == SSideMenuPosition.bottom))
-                ? widget.menuController.size.value + delta
-                : widget.menuController.size.value - delta;
-            print(width);
-            widget.menuController.size.value =
-                width.clamp(SMenuSize.menuWidthClosed, SMenuSize.menuWidthOpen);
+            if ((widget.position == SSideMenuPosition.left) ||
+                (widget.position == SSideMenuPosition.right)) {
+              double delta = details.delta.dx;
+              final width = widget.position == SSideMenuPosition.left
+                  ? widget.menuController.size.value + delta
+                  : widget.menuController.size.value - delta;
+              widget.menuController.size.value = width.clamp(
+                  SMenuSize.menuWidthClosed, SMenuSize.menuWidthOpen);
+            }
+          },
+          onVerticalDragUpdate: (details) {
+            if ((widget.position == SSideMenuPosition.top) ||
+                (widget.position == SSideMenuPosition.bottom)) {
+              double delta = details.delta.dy;
+              final width = widget.position == SSideMenuPosition.top
+                  ? widget.menuController.size.value + delta
+                  : widget.menuController.size.value - delta;
+              widget.menuController.size.value = width.clamp(
+                  SMenuSize.menuWidthClosed, SMenuSize.menuWidthOpen);
+            }
           },
           // onTap: () {
           //   menuController.toggle();

@@ -176,29 +176,36 @@ class CustomRectTween extends RectTween {
 
 class SPopupMenuRoute<T> extends PageRoute<T> {
   /// {@macro hero_dialog_route}
-  SPopupMenuRoute({
-    required WidgetBuilder builder,
-    RouteSettings? settings,
-    bool fullscreenDialog = false,
-  })  : _builder = builder,
+  SPopupMenuRoute(
+      {required WidgetBuilder builder,
+      RouteSettings? settings,
+      bool fullscreenDialog = false,
+      this.animDuration,
+      this.bgColor,
+      this.dismissable})
+      : _builder = builder,
         super(settings: settings, fullscreenDialog: fullscreenDialog);
 
   final WidgetBuilder _builder;
+  final Duration? animDuration;
+  final Color? bgColor;
+  final bool? dismissable;
 
   @override
   bool get opaque => false;
 
   @override
-  bool get barrierDismissible => true;
+  bool get barrierDismissible => dismissable ?? true;
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 300);
+  Duration get transitionDuration =>
+      animDuration ?? const Duration(milliseconds: 500);
 
   @override
   bool get maintainState => true;
 
   @override
-  Color get barrierColor => Colors.black12;
+  Color get barrierColor => bgColor ?? Colors.black12;
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
