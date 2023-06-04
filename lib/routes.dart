@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 enum SlideDirection { left, right, up, down }
 
@@ -12,11 +11,15 @@ class SlidePageRoute<T> extends PageRoute<T> {
     RouteSettings? settings,
     super.fullscreenDialog,
     this.direction,
+    this.duration,
+    this.curve,
   })  : _builder = builder,
         super(settings: settings);
 
   final WidgetBuilder _builder;
   final SlideDirection? direction;
+  final Duration? duration;
+  final Curve? curve;
 
   @override
   bool get opaque => false;
@@ -25,7 +28,8 @@ class SlidePageRoute<T> extends PageRoute<T> {
   bool get barrierDismissible => false;
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 300);
+  Duration get transitionDuration =>
+      duration ?? const Duration(milliseconds: 300);
 
   @override
   bool get maintainState => true;
@@ -60,9 +64,8 @@ class SlidePageRoute<T> extends PageRoute<T> {
         end = Offset.zero;
     }
 
-    const curve = Curves.ease;
-
-    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+    var tween = Tween(begin: begin, end: end)
+        .chain(CurveTween(curve: curve ?? Curves.easeInOutCubic));
 
     return SlideTransition(
       position: animation.drive(tween),
@@ -81,16 +84,20 @@ class SlidePageRoute<T> extends PageRoute<T> {
   String get barrierLabel => 'Popup dialog open';
 }
 
-class BottomUpPageRoute<T> extends PageRoute<T> {
+class FadePageRoute<T> extends PageRoute<T> {
   /// {@macro hero_dialog_route}
-  BottomUpPageRoute({
+  FadePageRoute({
     required WidgetBuilder builder,
     RouteSettings? settings,
-    bool fullscreenDialog = true,
+    super.fullscreenDialog,
+    this.duration,
+    this.curve,
   })  : _builder = builder,
-        super(settings: settings, fullscreenDialog: fullscreenDialog);
+        super(settings: settings);
 
   final WidgetBuilder _builder;
+  final Duration? duration;
+  final Curve? curve;
 
   @override
   bool get opaque => false;
@@ -99,7 +106,8 @@ class BottomUpPageRoute<T> extends PageRoute<T> {
   bool get barrierDismissible => false;
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 300);
+  Duration get transitionDuration =>
+      duration ?? const Duration(milliseconds: 300);
 
   @override
   bool get maintainState => true;
@@ -110,14 +118,14 @@ class BottomUpPageRoute<T> extends PageRoute<T> {
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    const begin = Offset(0.0, 1.0);
-    const end = Offset.zero;
-    const curve = Curves.ease;
+    double begin = 0;
+    double end = 1;
 
-    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+    var tween = Tween<double>(begin: begin, end: end)
+        .chain(CurveTween(curve: curve ?? Curves.easeInOutCubic));
 
-    return SlideTransition(
-      position: animation.drive(tween),
+    return FadeTransition(
+      opacity: animation.drive(tween),
       child: child,
     );
     // return child;
