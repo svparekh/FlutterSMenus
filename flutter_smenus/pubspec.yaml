@@ -1,6 +1,6 @@
-name: flutter_menus
-description: A Flutter package for menus. Many fully customizable side menus, dropdown menus, popup menus, and more.
-version: 0.1.0
+name: flutter_smenus
+description: Flutter package for all sorts of menus from dropdowns to sliding to resizable to navigation menus
+version: 1.0.0
 homepage:
 
 environment:
