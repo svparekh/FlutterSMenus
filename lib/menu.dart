@@ -358,6 +358,14 @@ class _SSlideMenuState extends SBaseMenuState<SSlideMenu> {
                     (widget.position == SMenuPosition.bottom))
                 ? const BoxConstraints(minHeight: 0, maxHeight: 250)
                 : const BoxConstraints(minWidth: 0, maxWidth: 250)),
+        width: (widget.position == SMenuPosition.left ||
+                widget.position == SMenuPosition.right)
+            ? (widget.style?.size?.maxWidth ?? 250)
+            : null,
+        height: (widget.position == SMenuPosition.top ||
+                widget.position == SMenuPosition.bottom)
+            ? (widget.style?.size?.maxHeight ?? 250)
+            : null,
         child: Column(
           //mainAxisSize: MainAxisSize.min,
           //direction: widget.direction ?? Axis.vertical,
@@ -559,6 +567,17 @@ class SResizableMenuNoWrapper extends SBaseMenu {
 class _SResizableMenuNoWrapperState
     extends SBaseMenuState<SResizableMenuNoWrapper> {
   int selectedIndex = 0;
+  double? resizedSize;
+
+  // @override
+  // void _openMenu() {
+  //   _animationController.forward(from: resizedSize);
+  // }
+
+  // @override
+  // void _closeMenu() {
+  //   _animationController.reverse(from: resizedSize);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -611,11 +630,11 @@ class _SResizableMenuNoWrapperState
               return SizedBox(
                 width: (widget.position == SMenuPosition.left ||
                         widget.position == SMenuPosition.right)
-                    ? _animation.value
+                    ? (resizedSize ?? _animation.value)
                     : null,
                 height: (widget.position == SMenuPosition.top ||
                         widget.position == SMenuPosition.bottom)
-                    ? _animation.value
+                    ? (resizedSize ?? _animation.value)
                     : null,
                 child: child,
               );
@@ -633,18 +652,9 @@ class _SResizableMenuNoWrapperState
                       ? const BoxConstraints(minHeight: 50, maxHeight: 250)
                       : const BoxConstraints(minWidth: 50, maxWidth: 250)),
               child: Column(
-                //mainAxisSize: MainAxisSize.min,
-                //direction: widget.direction ?? Axis.vertical,
                 children: [
                   // Header
                   if (widget.header != null) widget.header!,
-                  // Row(
-                  //   mainAxisAlignment: widget.style?.headerAlignment ??
-                  //       MainAxisAlignment.center,
-                  //   children: [
-                  //     Flexible(child: widget.header!),
-                  //   ],
-                  // ),
                   // Menu
                   Expanded(
                     child: Stack(
@@ -679,10 +689,53 @@ class _SResizableMenuNoWrapperState
         ),
         if (widget.position != null && (widget.resizable ?? true))
           _ResizeBar(
-            onChange: (size) {
-              print(size);
-              _animationController.animateTo(size.clamp(
-                  _SMenuSize.menuClosedSize, _SMenuSize.menuOpenSize));
+            onDragStart: (details) {},
+            onDragEnd: (details) {
+              resizedSize = null;
+            },
+            onDragUpdate: (details) {
+              double normalizedSize;
+
+              double closedSize = ((widget.position == SMenuPosition.top ||
+                          widget.position == SMenuPosition.bottom)
+                      ? widget.style?.size?.minHeight
+                      : widget.style?.size?.minWidth) ??
+                  _SMenuSize.menuClosedSize;
+              double openSize = ((widget.position == SMenuPosition.top ||
+                          widget.position == SMenuPosition.bottom)
+                      ? widget.style?.size?.maxHeight
+                      : widget.style?.size?.maxWidth) ??
+                  _SMenuSize.menuOpenSize;
+
+              // Set normalized size to current size (from 0 to 1)
+              normalizedSize =
+                  (((resizedSize == null) ? null : (resizedSize! / openSize)) ??
+                      _animationController.value);
+              // Add the normalized delta in mouse movement to the size (from 0 to 1)
+              // Change to negative (flipped) if right or bottom position
+              // This is so mouse movement reflects movement of the menu
+              switch (widget.position) {
+                case SMenuPosition.top:
+                  normalizedSize += (details.delta.dy / openSize);
+                  break;
+                case SMenuPosition.bottom:
+                  normalizedSize += -(details.delta.dy / openSize);
+                  break;
+                case SMenuPosition.right:
+                  normalizedSize += -(details.delta.dx / openSize);
+                  break;
+                case SMenuPosition.left:
+                default:
+                  normalizedSize += (details.delta.dx / openSize);
+              }
+
+              // Clamp size to min size and max size
+              normalizedSize = normalizedSize.clamp(closedSize / openSize, 1.0);
+
+              setState(() {
+                resizedSize = normalizedSize * openSize;
+                _animationController.value = normalizedSize;
+              });
             },
             position: widget.position!,
             controller: controller,
@@ -699,7 +752,9 @@ class _SResizableMenuNoWrapperState
 
 class _ResizeBar extends StatefulWidget {
   const _ResizeBar({
-    required this.onChange,
+    required this.onDragUpdate,
+    required this.onDragStart,
+    required this.onDragEnd,
     required this.controller,
     required this.position,
     required this.color,
@@ -707,7 +762,9 @@ class _ResizeBar extends StatefulWidget {
     required this.hoverSize,
     required this.size,
   });
-  final void Function(double size) onChange;
+  final void Function(DragUpdateDetails size) onDragUpdate;
+  final void Function(DragStartDetails details) onDragStart;
+  final void Function(DragEndDetails details) onDragEnd;
   final SMenuController controller;
   final SMenuPosition position;
   final Color color;
@@ -740,12 +797,24 @@ class _ResizeBarState extends State<_ResizeBar> {
     super.initState();
   }
 
+  void _onDragUpdate(DragUpdateDetails details) {
+    widget.onDragUpdate(details);
+  }
+
+  void _onDragStart(DragStartDetails details) {
+    widget.onDragStart(details);
+  }
+
+  void _onDragEnd(DragEndDetails details) {
+    widget.onDragEnd(details);
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       decoration: BoxDecoration(
           color: isHover ? widget.hoverColor : widget.color,
-          borderRadius: BorderRadius.circular(2)),
+          borderRadius: BorderRadius.circular(widget.size / 2)),
       duration: const Duration(milliseconds: 250),
       height: vert ? null : (isHover ? widget.hoverSize : widget.size),
       width: vert ? (isHover ? widget.hoverSize : widget.size) : null,
@@ -764,24 +833,12 @@ class _ResizeBarState extends State<_ResizeBar> {
           });
         },
         child: GestureDetector(
-          onHorizontalDragUpdate: (details) {
-            if ((widget.position == SMenuPosition.left) ||
-                (widget.position == SMenuPosition.right)) {
-              double delta = details.localPosition.dx;
-              final dx = widget.position == SMenuPosition.left
-                  ? _SMenuSize.menuOpenSize - delta
-                  : delta;
-              widget.onChange(dx);
-            }
-          },
-          onVerticalDragUpdate: (details) {
-            if ((widget.position == SMenuPosition.top) ||
-                (widget.position == SMenuPosition.bottom)) {
-              double delta = details.localPosition.dy;
-              final dx = widget.position == SMenuPosition.top ? delta : -delta;
-              widget.onChange(dx);
-            }
-          },
+          onVerticalDragUpdate: (details) => _onDragUpdate(details),
+          onVerticalDragStart: (details) => _onDragStart(details),
+          onVerticalDragEnd: (details) => _onDragEnd(details),
+          onHorizontalDragUpdate: (details) => _onDragUpdate(details),
+          onHorizontalDragStart: (details) => _onDragStart(details),
+          onHorizontalDragEnd: (details) => _onDragEnd(details),
           onTap: () {
             widget.controller.toggle();
           },

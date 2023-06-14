@@ -29,20 +29,14 @@ class SMenuItemDropdown<T> extends SMenuItem {
     return SizedBox(
       width: style?.width,
       height: style?.height,
-      child: Material(
-        shape: style?.shape ??
-            RoundedRectangleBorder(
-                borderRadius: style?.borderRadius ?? BorderRadius.circular(15)),
-        color: style?.bgColor ?? Colors.white,
-        child: Padding(
-          padding: style?.padding ?? const EdgeInsets.all(5.0),
-          child: Row(
-            children: [
-              Flexible(child: leading ?? Container()),
-              Flexible(child: title ?? Container()),
-              Flexible(child: trailing ?? Container())
-            ],
-          ),
+      child: Padding(
+        padding: style?.padding ?? const EdgeInsets.all(5.0),
+        child: Row(
+          children: [
+            leading ?? const SizedBox.square(dimension: 10),
+            Expanded(child: title ?? Container()),
+            trailing ?? const SizedBox.square(dimension: 10)
+          ],
         ),
       ),
     );
@@ -51,12 +45,13 @@ class SMenuItemDropdown<T> extends SMenuItem {
 
 class SMenuItemDropdownSelectable extends SMenuItem {
   const SMenuItemDropdownSelectable({
+    super.key,
+    super.value,
     this.onPressed,
-    Key? key,
     this.leading,
     this.title,
     this.trailing,
-  }) : super(key: key);
+  });
   final Widget? leading;
   final Widget? title;
   final Widget? trailing;
@@ -350,14 +345,13 @@ class _SDropdownMenuCascadeState<T>
   void _openMenu() {
     _overlayEntry = _createOverlayEntry();
     Overlay.of(context).insert(_overlayEntry!);
-    setState(() => controller.state.value = SMenuState.open);
     _animationController.forward();
   }
 
   void _closeMenu() async {
-    await _animationController.reverse();
-    _overlayEntry?.remove();
-    setState(() => controller.state.value = SMenuState.closed);
+    await _animationController
+        .reverse()
+        .then((value) => _overlayEntry?.remove());
   }
 
   void _toggleMenu({bool close = false}) async {
@@ -394,6 +388,18 @@ class _SDropdownMenuCascadeState<T>
       curve: Curves.easeInOut,
     ));
 
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.state.value = SMenuState.open;
+      } else if (status == AnimationStatus.dismissed) {
+        controller.state.value = SMenuState.closed;
+      } else if (status == AnimationStatus.forward) {
+        controller.state.value = SMenuState.opening;
+      } else if (status == AnimationStatus.reverse) {
+        controller.state.value = SMenuState.closing;
+      }
+    });
+
     super.initState();
   }
 
@@ -401,7 +407,7 @@ class _SDropdownMenuCascadeState<T>
   void dispose() {
     _animationController.dispose();
 
-    if (_overlayEntry != null) {
+    if (true) {
       _overlayEntry?.remove();
       _overlayEntry?.dispose();
     }
@@ -462,7 +468,6 @@ class _SDropdownMenuCascadeState<T>
   OverlayEntry _createOverlayEntry() {
     // find the size and position of the current widget
     Offset position = calcPopupPosition(context);
-    print(position);
 
 // missing local position?
     return OverlayEntry(
@@ -499,24 +504,37 @@ class _SDropdownMenuCascadeState<T>
                               maxWidth: widget.style?.width ?? 250,
                               maxHeight: widget.style?.height ?? 350,
                             ),
-                        child: ListView(
-                          padding: widget.style?.padding ?? EdgeInsets.zero,
-                          shrinkWrap: true,
-                          children: widget.items.asMap().entries.map((item) {
-                            return GestureDetector(
-                              onTap: () {
-                                if (item.value.value != null) {
-                                  setState(() => _currentIndex = item.key);
-                                  if (widget.onChange != null) {
-                                    widget.onChange!(
-                                        item.value.value as T, item.key);
-                                  }
-                                  _toggleMenu(close: true);
-                                }
-                              },
-                              child: item.value,
-                            );
-                          }).toList(),
+                        child: SizedBox(
+                          height: widget.style?.height ?? 350,
+                          child: ListView(
+                            padding: widget.style?.padding ?? EdgeInsets.zero,
+                            shrinkWrap: true,
+                            children: widget.items.asMap().entries.map((item) {
+                              return Material(
+                                borderRadius:
+                                    widget.buttonStyle?.borderRadius ??
+                                        BorderRadius.circular(15),
+                                color: widget.buttonStyle?.bgColor ??
+                                    Theme.of(context).colorScheme.onPrimary,
+                                child: InkWell(
+                                  borderRadius:
+                                      widget.buttonStyle?.borderRadius ??
+                                          BorderRadius.circular(15),
+                                  onTap: () {
+                                    if (item.value.value != null) {
+                                      setState(() => _currentIndex = item.key);
+                                      if (widget.onChange != null) {
+                                        widget.onChange!(
+                                            item.value.value as T, item.key);
+                                      }
+                                      _toggleMenu(close: true);
+                                    }
+                                  },
+                                  child: item.value,
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                     ),
@@ -702,20 +720,21 @@ class _SDropdownMenuPopup<T> extends StatelessWidget {
   final Object tag;
   final List<SMenuItem<T>> items;
   final SDropdownMenuStyle? style;
+  final SMenuItemStyle? buttonStyle;
   final SMenuController? controller;
   final Widget? header;
   final Widget? footer;
   final Offset position;
   const _SDropdownMenuPopup(
-      {Key? key,
+      {super.key,
       required this.tag,
       required this.items,
+      this.buttonStyle,
       this.controller,
       this.header,
       this.footer,
       this.style = const SDropdownMenuStyle(),
-      required this.position})
-      : super(key: key);
+      required this.position});
 
   @override
   Widget build(BuildContext context) {
@@ -743,14 +762,22 @@ class _SDropdownMenuPopup<T> extends StatelessWidget {
                   // padding: style?.padding ?? EdgeInsets.zero,
                   // shrinkWrap: true,
                   children: items.asMap().entries.map((item) {
-                    return GestureDetector(
-                      onTap: () {
-                        if (item.value.value != null) {
-                          Navigator.pop(context,
-                              {'index': item.key, 'value': item.value.value});
-                        }
-                      },
-                      child: item.value,
+                    return Material(
+                      borderRadius: buttonStyle?.borderRadius ??
+                          BorderRadius.circular(15),
+                      color: buttonStyle?.bgColor ??
+                          Theme.of(context).colorScheme.onPrimary,
+                      child: InkWell(
+                        borderRadius: buttonStyle?.borderRadius ??
+                            BorderRadius.circular(15),
+                        onTap: () {
+                          if (item.value.value != null) {
+                            Navigator.pop(context,
+                                {'index': item.key, 'value': item.value.value});
+                          }
+                        },
+                        child: item.value,
+                      ),
                     );
                   }).toList(),
                 ),
