@@ -182,13 +182,21 @@ Row(
 
 All menus support custom children.
 
+For items:
+
 ```dart
-items = <SMenuItem>[];
+child = <Widget>
+
+builder = (context, style, child) {
+    return <Widget>
+}
 ```
 
-or
+or for menus:
 
 ```dart
+items = <SMenuItem>[];
+
 builder = (context) {
     return <Widget>
 }
