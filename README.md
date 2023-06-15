@@ -16,11 +16,11 @@ and the Flutter guide for
 
 TODO: Put a short description of the package here that helps potential users know whether this package might be useful for them.
 
-## Features
+# Features
 
 TODO: List what your package can do. Maybe include images, gifs, or videos.
   
-### Menus:
+## Menus:
 
 |Name                 | Description                                                                                        |
 |---------------------|----------------------------------------------------------------------------------------------------|
@@ -29,42 +29,156 @@ TODO: List what your package can do. Maybe include images, gifs, or videos.
 |SDropdownMenuCascade |Classic dropdown menu [WIP]                                                                         |
 |SDropdownMenuMorph   |Dropdown popup menu using Hero [WIP]                                                                |
 
-## Getting started
+# Getting started
+
+## Install
+
+Visit the Install tab for more information
+
+Add this line to your pubspec.yaml
+
+```yaml
+dependencies:
+    flutter_smenus: ^1.0.0
+```
+
+or run this in your project's terminal
+
+```shell
+$ flutter pub add flutter_smenus
+```
+
+> Remember to run ```flutter pub get```
 
 TODO: List prerequisites and provide or point to information on how to start using the package.
 
-## Usage
+# Showcase
+
+
+# Code
 
 TODO: Include short and useful examples for package users. Add longer examples to `/example` folder.
 
-### Menus
+Jump to:
 
-```dart
-const SResizableMenu
-const SResizableMenuNoWrapper
-const SSlideMenu
-```
+SResizableMenu
 
-### Menu Items
+SResizableMenuNoWrapper
 
-```dart
-const SMenuItemButton
-const SMenuItemCustom
-```
+SSlideMenu
 
-### Classes
+SMenuItemButton
 
-```dart
+SMenuItemCustom
+
 SMenuController
-const SMenuState
-const SMenuPosition
-const SMenuStyle
-const SMenuItemStyle
-const SBaseMenu
-const SBaseMenuState
+
+SMenuState
+
+SMenuPosition
+
+SMenuStyle
+
+SMenuItemStyle
+
+SBaseMenu
+
+SBaseMenuState
+
+Custom Menu Items and Menu Builder
+
+#
+
+
+## SResizableMenu
+
+```dart
+const SResizableMenu({
+    super.key,
+    this.menuKey,
+    this.style,
+    this.controller,
+    this.items,
+    this.builder,
+    this.body,
+    this.header,
+    this.footer,
+    this.scrollPhysics,
+    this.direction,
+    this.duration,
+    this.position,
+    this.enableSelector,
+    this.resizable,
+    this.barColor,
+    this.barHoverColor,
+    this.barSize,
+    this.barHoverSize,
+  });
 ```
 
-### Custom Menu Items and Menu Builder
+Sample
+
+```dart
+SResizableMenu(
+    controller: SMenuController(),
+    position: SMenuPosition.left,
+    items: [],
+    body: Container(),
+)
+```
+
+## SResizableMenuNoWrapper
+
+```dart
+const SResizableMenuNoWrapper({
+    super.key,
+    super.style,
+    super.controller,
+    super.items,
+    super.builder,
+    super.header,
+    super.footer,
+    super.scrollPhysics,
+    super.direction,
+    super.duration,
+    super.position,
+    this.enableSelector = false,
+    this.resizable = true,
+    this.barColor,
+    this.barHoverColor,
+    this.barSize,
+    this.barHoverSize,
+})
+```
+
+Sample
+
+```dart
+Row(
+    children: [
+        SResizableMenuNoWrapper(
+            controller: SMenuController(),
+            position: SMenuPosition.left,
+            items: [],
+        ),
+        Expanded(child: Container()),
+    ],
+)
+```
+
+## SSlideMenu
+## SMenuItemButton
+## SMenuItemCustom
+## SMenuController
+## SMenuState
+## SMenuPosition
+## SMenuStyle
+## SMenuItemStyle
+## SBaseMenu
+## SBaseMenuState
+
+
+## Custom Menu Items and Menu Builder
 
 All menus support custom children.
 
