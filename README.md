@@ -1,5 +1,5 @@
 
-# FlutterMenus
+# Flutter SMenus
 
 A Flutter package for dropdown menus, many types of side menus, three dot menus, and popup menus.
 
@@ -126,6 +126,33 @@ SResizableMenu(
     body: Container(),
 )
 ```
+
+<details>
+
+Either ```items``` or ```builder``` must not be null
+
+|Parameter             |Object Type                           |Default                          |Description |
+|----------------------|--------------------------------------|---------------------------------|------------|
+|```style```           |SMenuStyle?                           |SMenuStyle()                     |            |
+|```controller```      |SMenuController?                      |SMenuController()                |            |
+|```items```           |List<SMenuItem>?                      |null                             |            |
+|```builder```         |Widget Function(BuildContext context)?|null                             |            |
+|```body```            |Widget?                               |null                             |            |
+|```header```          |Widget?                               |null                             |            |
+|```footer```          |Widget?                               |null                             |            |
+|```scrollPhysics```   |ScrollPhysics?                        |null                             |            |
+|```direction```       |Axis?                                 |Axis.vertical                    |            |
+|```duration```        |Duration?                             |const Duration(milliseconds: 250)|            |
+|```position```        |SMenuPosition?                        |SMenuPosition.left               |            |
+|```enableSelector```  |bool?                                 |false                            |            |
+|```resizable```       |bool?                                 |true                             |            |
+|```barColor```        |Color?                                |null                             |            |
+|```barHoverColor```   |Color?                                |null                             |            |
+|```barSize```         |double?                               |null                             |            |
+|```barHoverSize```    |double?                               |null                             |            |
+
+
+</details>
 
 ## SResizableMenuNoWrapper
 
