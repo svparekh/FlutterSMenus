@@ -87,8 +87,6 @@ SBaseMenuState
 
 Custom Menu Items and Menu Builder
 
-#
-
 
 ## SResizableMenu
 
@@ -113,7 +111,7 @@ const SResizableMenu({
     this.barHoverColor,
     this.barSize,
     this.barHoverSize,
-  });
+  })
 ```
 
 Sample
@@ -127,7 +125,8 @@ SResizableMenu(
 )
 ```
 
-<details>
+<details title=''>
+<summary>Parameters</summary>
 
 Either ```items``` or ```builder``` must not be null
 
@@ -135,9 +134,9 @@ Either ```items``` or ```builder``` must not be null
 |----------------------|--------------------------------------|---------------------------------|------------|
 |```style```           |SMenuStyle?                           |SMenuStyle()                     |            |
 |```controller```      |SMenuController?                      |SMenuController()                |            |
-|```items```           |List<SMenuItem>?                      |null                             |            |
+|```items```           |List< SMenuItem>?                     |null                             |            |
 |```builder```         |Widget Function(BuildContext context)?|null                             |            |
-|```body```            |Widget?                               |null                             |            |
+|```body```            |Widget?                               |Container()                      |            |
 |```header```          |Widget?                               |null                             |            |
 |```footer```          |Widget?                               |null                             |            |
 |```scrollPhysics```   |ScrollPhysics?                        |null                             |            |
@@ -148,8 +147,8 @@ Either ```items``` or ```builder``` must not be null
 |```resizable```       |bool?                                 |true                             |            |
 |```barColor```        |Color?                                |null                             |            |
 |```barHoverColor```   |Color?                                |null                             |            |
-|```barSize```         |double?                               |null                             |            |
-|```barHoverSize```    |double?                               |null                             |            |
+|```barSize```         |double?                               |3                                |            |
+|```barHoverSize```    |double?                               |5                                |            |
 
 
 </details>
@@ -175,7 +174,7 @@ const SResizableMenuNoWrapper({
     this.barHoverColor,
     this.barSize,
     this.barHoverSize,
-})
+    })
 ```
 
 Sample
@@ -194,16 +193,61 @@ Row(
 ```
 
 ## SSlideMenu
+
+```dart
+const SSlideMenu({
+    super.key,
+    super.style,
+    super.controller,
+    super.items,
+    super.builder,
+    super.header,
+    super.footer,
+    super.scrollPhysics,
+    super.direction,
+    super.duration,
+    super.position,
+    this.body,
+    this.enableSelector = false,
+    this.barrierColor,
+    this.enableGestures,
+    this.isBodyMovable = true,
+    this.isMenuMovable = true
+    })
+```
+
+Sample
+
+```dart
+SSlideMenu(
+    controller: SMenuController(),
+    position: SMenuPosition.left,
+    items: [],
+    isBodyMovable = false,
+    body: Container(),
+)
+```
+## SDropdownMenuCascade
+## SDropdownMenuMorph
+
 ## SMenuItemButton
 ## SMenuItemCustom
+## SMenuItemDropdown
+## SMenuItemDropdownSelectable
+
+## SMenuStyle
+## SDropdownMenuStyle
+## SMenuItemStyle
+
+## SMenuPosition
+## SDropdownMenuAlignment
 ## SMenuController
 ## SMenuState
-## SMenuPosition
-## SMenuStyle
-## SMenuItemStyle
+
 ## SBaseMenu
 ## SBaseMenuState
-
+## SDropdownMenu
+## SDropdownMenuState
 
 ## Custom Menu Items and Menu Builder
 
