@@ -274,20 +274,177 @@ SDropdownMenuMorph(
 
 
 ## SMenuItemButton
+
+```dart
+SMenuItemButton(
+    icon: Icons.home,
+    value: 1,
+    title: Text('Home'),
+    isSelected: select,
+    onPressed: () {
+        setState((){
+            select = !select;
+        });
+    }
+)
+```
+
+<details>
+<summary>Parameters</summary>
+
+|Parameter             |Object Type                           |Default                          |Description                                                                                            |
+|----------------------|--------------------------------------|---------------------------------|-------------------------------------------------------------------------------------------------------|
+|```icon```           |IconData                     |required                             |                                                              |
+|```style```           |SMenuItemStyle?                           |SMenuItemStyle()                     |Color, border radius, size, padding, alignment. See ```SMenuItemStyle```                                         |
+|```value```      |T?                      |null                |Controller to open, close, or toggle menu                                                              |
+|```title```  |Widget?                                 |null                            ||
+|```selectedTextColor```          |Color?                               |null                             |The widget at the top of the menu                                                                      |
+|```selectedIconColor```          |Color?                               |null                             |The widget at the bottom of the menu                                                                   |
+|```textColor```       |Color?                                 |null                    |If icon should be hidden    |
+|```iconColor```        |Color?                        |null               |                                                     |
+|```isSelected```  |bool?                                 |false                            ||
+|```onPressed```        |void Function()?                                |null                             |If Icon should come before text                                                                                  |
+
+
+</details>
+
+
 ## SMenuItemCustom
+
+
+```dart
+SMenuItemCustom(
+    value: 'Custom Item',
+    builder: () {
+        return Text('Menu Item');
+    }
+)
+```
+
+
+<details>
+<summary>Parameters</summary>
+
+|Parameter             |Object Type                           |Default                          |Description                                                                                            |
+|----------------------|--------------------------------------|---------------------------------|-------------------------------------------------------------------------------------------------------|
+|```child```           |Widget?                     |Container()          |The widget that makes up the menu item|
+|```style```           |SMenuItemStyle?                           |SMenuItemStyle()                     |Color, border radius, size, padding, alignment. See ```SMenuItemStyle```                                         |
+|```value```      |T?                      |null                |Controller to open, close, or toggle menu                                                              |
+|```builder```  |Widget Function(BuildContext context, SMenuItemStyle? style, Widget? child)?                                 |null                            |If builder is not null, then the builder function will be used to make the menu item rather than the child. A builder function has parameters context, style, and child. This function should return a widget.|
+
+
+
+</details>
+
+
 ## SMenuItemDropdown
+
+```dart
+SMenuItemDropdown(
+    value: 1,
+    title: Text('Dropdown Item')
+)
+```
+
+<details>
+<summary>Parameters</summary>
+
+|Parameter             |Object Type                           |Default                          |Description                                                                                            |
+|----------------------|--------------------------------------|---------------------------------|-------------------------------------------------------------------------------------------------------|
+|```value```      |T                      |required                |Controller to open, close, or toggle menu                                                              |
+|```leading```           |Widget?                     |null          |The widget that makes up the menu item|
+|```title```           |Widget?                     |null          |The widget that makes up the menu item|
+|```trailing```           |Widget?                     |null          |The widget that makes up the menu item|
+|```style```           |SMenuItemStyle?                           |SMenuItemStyle()                     |Color, border radius, size, padding, alignment. See ```SMenuItemStyle```                                         |
+|```onPressed```        |void Function()?                                |null                             |If Icon should come before text                                                                                  |
+
+
+</details>
+
+
 ## SMenuItemDropdownSelectable
 
 ## SMenuStyle
+
+    final BorderRadius? borderRadius;
+    final MainAxisAlignment? headerAlignment;
+    final EdgeInsets? padding;
+    final BoxConstraints? size;
+
+    /// width/height: min = closed, max = open
+    final MainAxisAlignment? footerAlignment;
+    final MainAxisAlignment? alignment;
+    final Color? barColor;
+    final Color? backgroundColor;
+
 ## SDropdownMenuStyle
+
+    this.alignment = SDropdownMenuAlignment.bottomCenter,
+    this.constraints,
+    this.offset,
+    this.width = 250,
+    this.height,
+    this.elevation,
+    this.color,
+    this.padding,
+    this.borderRadius,
+
 ## SMenuItemStyle
 
+    final MainAxisAlignment? mainAxisAlignment;
+    final BorderRadius? borderRadius;
+    final OutlinedBorder? shape;
+    final double? elevation;
+    final EdgeInsets? padding;
+    final BoxConstraints? constraints;
+    final double? width;
+    final double? height;
+    final Color? accentColor;
+    final Color? selectedAccentColor;
+    final Color? bgColor;
+    final Color? selectedBgColor;
+
 ## SMenuPosition
+
+    enum SMenuPosition {
+    top,
+    bottom,
+    left,
+    right;
+
+    bool get isVertical =>
+        this == SMenuPosition.top || this == SMenuPosition.bottom;
+    bool get isHorizontal =>
+        this == SMenuPosition.left || this == SMenuPosition.right;
+    }
+
 ## SDropdownMenuAlignment
+
+    enum SDropdownMenuAlignment {
+    topLeft,
+    topCenter,
+    topRight,
+    centerLeft,
+    center,
+    centerRight,
+    bottomLeft,
+    bottomCenter,
+    bottomRight
+    }
+
 ## SMenuController
+
+    class SMenuController {
+    late void Function() open;
+    late void Function() close;
+    late void Function() toggle;
+    final ValueNotifier<SMenuState> state =
+        ValueNotifier<SMenuState>(SMenuState.closed);
+    }
+
 ## SMenuState
 
-
+    enum SMenuState { open, closed, opening, closing }
 
 
 # Additional information
