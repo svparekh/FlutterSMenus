@@ -477,7 +477,10 @@ class SResizableMenu extends StatelessWidget {
     this.barHoverColor,
     this.barSize,
     this.barHoverSize,
-  });
+  }) : assert(
+          !(builder == null && items == null),
+          "FAILED ASSERT - builder | items != null: The menu requires either builder or items arguments to be populated.",
+        );
   final Key? menuKey;
   final SMenuStyle? style;
   final SMenuController? controller;
@@ -551,7 +554,10 @@ class SResizableMenuNoWrapper extends SBaseMenu {
     this.barHoverColor,
     this.barSize,
     this.barHoverSize,
-  });
+  }) : assert(
+          !(builder == null && items == null),
+          "FAILED ASSERT - builder | items != null: The menu requires either builder or items arguments to be populated.",
+        );
   final bool? enableSelector;
   final bool? resizable;
   final Color? barColor;

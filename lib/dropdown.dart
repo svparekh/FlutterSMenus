@@ -552,33 +552,20 @@ class _SDropdownMenuCascadeState<T>
 class SDropdownMenuMorph<T> extends SDropdownMenu<T> {
   const SDropdownMenuMorph({
     this.itemStyle,
-    final Key? key,
-    final bool? hideIcon = false,
-    final Widget? child,
-    required List<SMenuItem<T>> items,
-    final SDropdownMenuStyle? style = const SDropdownMenuStyle(),
-    final Widget? icon,
-    final bool? leadingIcon = false,
-    final void Function(dynamic, int)? onChange,
-    final SMenuController? controller,
-    final Widget? header,
-    final Widget? footer,
-    final bool? showSelected,
-    final bool? isSmall,
-  }) : super(
-            key: key,
-            hideIcon: hideIcon,
-            child: child,
-            items: items,
-            style: style,
-            icon: icon,
-            leadingIcon: leadingIcon,
-            onChange: onChange,
-            controller: controller,
-            header: header,
-            footer: footer,
-            showSelected: showSelected,
-            isSmall: isSmall);
+    super.key,
+    super.hideIcon = false,
+    super.child,
+    required super.items,
+    super.style = const SDropdownMenuStyle(),
+    super.icon,
+    super.leadingIcon = false,
+    super.onChange,
+    super.controller,
+    super.header,
+    super.footer,
+    super.showSelected,
+    super.isSmall,
+  });
   final SMenuItemStyle? itemStyle;
   @override
   State<SDropdownMenuMorph<T>> createState() => _SDropdownMenuMorphState<T>();
