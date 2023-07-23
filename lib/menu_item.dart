@@ -96,16 +96,12 @@ class SMenuItemCustom<T> extends SMenuItem {
   final Widget Function(
       BuildContext context, SMenuItemStyle? style, Widget? child)? builder;
   const SMenuItemCustom({
-    Key? key,
-    T? value,
-    SMenuItemStyle? style,
+    super.key,
+    super.value,
+    super.style,
     this.child,
     this.builder,
-  }) : super(
-          key: key,
-          value: value,
-          style: style,
-        );
+  });
 
   @override
   Widget build(BuildContext context) {
