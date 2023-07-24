@@ -364,87 +364,216 @@ SMenuItemDropdown(
 
 ## SMenuItemDropdownSelectable
 
+ListTile version of ```SMenuItemDropdown```
+```dart
+SMenuItemDropdownSelectable(
+    value: 1,
+    title: Text('Dropdown Item')
+)
+```
+
+<details>
+<summary>Parameters</summary>
+
+|Parameter             |Object Type                           |Default                          |Description                                                                                            |
+|----------------------|--------------------------------------|---------------------------------|-------------------------------------------------------------------------------------------------------|
+|```value```      |T                      |required                |Controller to open, close, or toggle menu                                                              |
+|```leading```           |Widget?                     |null          |The widget that makes up the menu item|
+|```title```           |Widget?                     |null          |The widget that makes up the menu item|
+|```trailing```           |Widget?                     |null          |The widget that makes up the menu item|
+|```onPressed```        |void Function()?                                |null                             |If Icon should come before text                                                                                  |
+
+
+</details>
+
+
 ## SMenuStyle
 
-    final BorderRadius? borderRadius;
-    final MainAxisAlignment? headerAlignment;
-    final EdgeInsets? padding;
-    final BoxConstraints? size;
 
-    /// width/height: min = closed, max = open
-    final MainAxisAlignment? footerAlignment;
-    final MainAxisAlignment? alignment;
-    final Color? barColor;
-    final Color? backgroundColor;
+```dart
+SMenuStyle(
+    borderRadius: BorderRadius.circular(15),
+    size: BoxContraints(minWidth: 50, maxWidth: 250)
+)
+```
+
+<details>
+<summary>Parameters</summary>
+
+|Parameter             |Object Type                           |Default                          |Description                                                                                            |
+|----------------------|--------------------------------------|---------------------------------|-------------------------------------------------------------------------------------------------------|
+|```borderRadius```      |BorderRadius?                      |null                | |
+|```headerAlignment```      |MainAxisAlignment?                      |null                | |
+|```padding```      |EdgeInsets?                      |null                | |
+|```size```      |BoxConstraints?                      |null                | |
+|```footerAlignment```      |MainAxisAlignment?                      |null                | |
+|```alignment```      |MainAxisAlignment?                      |null                | |
+|```barColor```      |Color?                      |null                | |
+|```backgroundColor```      |Color?                      |null                | |
+
+
+</details>
+
 
 ## SDropdownMenuStyle
 
-    this.alignment = SDropdownMenuAlignment.bottomCenter,
-    this.constraints,
-    this.offset,
-    this.width = 250,
-    this.height,
-    this.elevation,
-    this.color,
-    this.padding,
-    this.borderRadius,
+```dart
+SDropdownMenuStyle(
+    borderRadius: BorderRadius.circular(15),
+)
+```
+
+<details>
+<summary>Parameters</summary>
+
+|Parameter             |Object Type                           |Default                          |Description                                                                                            |
+|----------------------|--------------------------------------|---------------------------------|-------------------------------------------------------------------------------------------------------|
+|```alignment```      |SDropdownMenuAlignment?                      |SDropdownMenuAlignment.bottomCenter                | |
+|```constraints```      |BoxConstraints?                      |null                | |
+|```offset```      |Offset?                      |null                | |
+|```width```      |double                      |250                | |
+|```height```      |double?                      |null                | |
+|```elevation```      |double?                      |null                | |
+|```color```      |Color?                      |null                | |
+|```padding```      |EdgeInsets?                      |null                | |
+|```borderRadius```      |BorderRadius?                      |null                | |
+
+</details>
+
 
 ## SMenuItemStyle
 
-    final MainAxisAlignment? mainAxisAlignment;
-    final BorderRadius? borderRadius;
-    final OutlinedBorder? shape;
-    final double? elevation;
-    final EdgeInsets? padding;
-    final BoxConstraints? constraints;
-    final double? width;
-    final double? height;
-    final Color? accentColor;
-    final Color? selectedAccentColor;
-    final Color? bgColor;
-    final Color? selectedBgColor;
+```dart
+SMenuItemStyle(
+    borderRadius: BorderRadius.circular(15),
+)
+```
+
+<details>
+<summary>Parameters</summary>
+
+|Parameter             |Object Type                           |Default                          |Description                                                                                            |
+|----------------------|--------------------------------------|---------------------------------|-------------------------------------------------------------------------------------------------------|
+|```mainAxisAlignment```      |MainAxisAlignment?                      |null                | |
+|```borderRadius```      |BorderRadius?                      |null                | |
+|```shape```      |OutlinedBorder?                      |null                | |
+|```elevation```      |double?                      |null                | |
+|```padding```      |EdgeInsets?                      |null                | |
+|```constraints```      |BoxConstraints?                      |null                | |
+|```width```      |double?                      |null                | |
+|```height```      |double?                      |null                | |
+|```accentColor```      |Color?                      |null                | |
+|```selectedAccentColor```      |Color?                      |null                | |
+|```bgColor```      |Color?                      |null                | |
+|```selectedBgColor```      |Color?                      |null                | |
+
+</details>
+
 
 ## SMenuPosition
 
-    enum SMenuPosition {
-    top,
-    bottom,
-    left,
-    right;
+```dart
+SMenuPosition.top
+SMenuPosition.bottom
+SMenuPosition.left
+SMenuPosition.right
+SMenuPosition.isVertical
+SMenuPosition.isHorizontal
+```
 
-    bool get isVertical =>
-        this == SMenuPosition.top || this == SMenuPosition.bottom;
-    bool get isHorizontal =>
-        this == SMenuPosition.left || this == SMenuPosition.right;
-    }
+<details>
+<summary>More Information</summary>
+
+|Parameter             |Type |Description                           |
+|----------------------|-|--------------------------------------|
+|```SMenuPosition.top```      |Enum|Position the menu at the top of a screen|
+|```SMenuPosition.bottom```      |Enum|Position the menu at the bottom of a screen|
+|```SMenuPosition.left```      |Enum|Position the menu to the left of a screen|
+|```SMenuPosition.right```      |Enum|Position the menu to the right of a screen|
+|```SMenuPosition.isVertical```      |bool|True if position is currently set to top or bottom|
+|```SMenuPosition.isHorizontal```      |bool|True if position is currently set to left or right|
+
+
+</details>
+
 
 ## SDropdownMenuAlignment
 
-    enum SDropdownMenuAlignment {
-    topLeft,
-    topCenter,
-    topRight,
-    centerLeft,
-    center,
-    centerRight,
-    bottomLeft,
-    bottomCenter,
-    bottomRight
-    }
+```dart
+SDropdownMenuAlignment.topLeft
+SDropdownMenuAlignment.topCenter
+SDropdownMenuAlignment.topRight
+SDropdownMenuAlignment.centerLeft
+SDropdownMenuAlignment.center
+SDropdownMenuAlignment.centerRight
+SDropdownMenuAlignment.bottomLeft
+SDropdownMenuAlignment.bottomCenter
+SDropdownMenuAlignment.bottomRight
+```
+
+<details>
+<summary>More Information</summary>
+
+Dropdown button is located at the center. The dropdown will open in these directions as specificed by the alignment:
+
+||||
+|-|-|-|
+|  Top Left  |  Top Center  |  Top Right  |
+|  Center Left  |  Center  |  Center Right  |
+|  Bottom Left  |  Bottom Center  |  Bottom RIght  |
+
+</details>
+
 
 ## SMenuController
 
-    class SMenuController {
-    late void Function() open;
-    late void Function() close;
-    late void Function() toggle;
-    final ValueNotifier<SMenuState> state =
-        ValueNotifier<SMenuState>(SMenuState.closed);
-    }
+```dart
+SMenuController.open()
+SMenuController.close()
+SMenuController.toggle()
+SMenuController.state
+    -> SMenuController.state.addListenter()
+    -> SMenuController.state.removeListenter()
+    -> SMenuController.state.value = <SMenuState>
+    -> ... other ValueNotifier methods
+```
+
+<details>
+<summary>More Information</summary>
+
+
+|Parameter             |Type |Description                           |
+|----------------------|-|--------------------------------------|
+|```SMenuController.open()```      |Method|Open the menu that this controller is assigned to|
+|```SMenuController.close()```      |Method|Close the menu that this controller is assigned to|
+|```SMenuController.toggle()```      |Method|Toggle the menu that this controller is assigned to|
+|```SMenuController.state```      |ValueNotifier< SMenuState>|A value notifier that will send an update when the state of the menu changes. The value of this notifier is ```SMenuState```|
+
+</details>
+
 
 ## SMenuState
 
-    enum SMenuState { open, closed, opening, closing }
+```dart
+SMenuState.open
+SMenuState.closed
+SMenuState.opening
+SMenuState.closing
+```
+
+<details>
+<summary>More Information</summary>
+
+
+|Parameter             | Description                           |
+|----------------------|--------------------------------------|
+|```SMenuState.open```      |The menu is currently not fully closed|
+|```SMenuState.closed```      |The menu is currently fully closed|
+|```SMenuState.opening```      |The menu is currently in the process of opening. The animation to open is still playing|
+|```SMenuState.closing```      |The menu is currently in the process of closing. The animation to close is still playing|
+
+</details>
+
 
 
 # Additional information
