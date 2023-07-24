@@ -14,7 +14,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-![SMenus, fire Flutter Menus](image.png)
+![SMenus, fire Flutter Menus](smenus_logo.png)
 # Features
 
 See Showcase for visual on all types of menus and examples I've created.
@@ -484,7 +484,7 @@ SMenuPosition.isHorizontal
 <details>
 <summary>More Information</summary>
 
-|Parameter             |Type |Description                           |
+|Value             |Value Type |Description                           |
 |----------------------|-|--------------------------------------|
 |```SMenuPosition.top```      |Enum|Position the menu at the top of a screen|
 |```SMenuPosition.bottom```      |Enum|Position the menu at the bottom of a screen|
@@ -542,7 +542,7 @@ SMenuController.state
 <summary>More Information</summary>
 
 
-|Parameter             |Type |Description                           |
+|Name             |Type |Description                           |
 |----------------------|-|--------------------------------------|
 |```SMenuController.open()```      |Method|Open the menu that this controller is assigned to|
 |```SMenuController.close()```      |Method|Close the menu that this controller is assigned to|
@@ -565,7 +565,7 @@ SMenuState.closing
 <summary>More Information</summary>
 
 
-|Parameter             | Description                           |
+|Value             | Description                           |
 |----------------------|--------------------------------------|
 |```SMenuState.open```      |The menu is currently not fully closed|
 |```SMenuState.closed```      |The menu is currently fully closed|
