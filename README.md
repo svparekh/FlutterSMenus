@@ -1,12 +1,23 @@
-
-# Flutter SMenus
-
+<div align="center"> 
+<h2 align="center">Flutter SMenus</h2> 
+<img height="160" align="center"  alt="logo" src="https://raw.githubusercontent.com/svparekh/fluttermenus/main/smenus_logo.png"/>
+</br>
+<a href="https://github.com/svparekh/fluttermenus/blob/main/LICENSE">  
+  <img alt="GitHub" src="https://img.shields.io/github/license/svparekh/fluttermenus"> 
+</a>  
+<a href="https://github.com/svparekhfluttermenus">  
+  <img alt="Pub Version" src="https://img.shields.io/pub/v/flutter_smenus" />
+</a>  
+<a>  
+  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/svparekh/fluttermenus">  
+</a>  
+</div>
+</br>
 Custom menus designed to your imagination!
 
 A Flutter package for dropdown menus, many types of side menus, three dot menus, and popup menus.
 Almost any kind of menu can be created with this package with almost any style. The basic types of menu and their customizability is shown below. This package is super easy to use and includes the ability to customize the menus to the your imagination. All menus support custom menu pages or custom menu items. There are animated resizable menus, dropdown menus, and traditional menus.
 
-![SMenus, fire Flutter Menus](smenus_logo.png)
 # Features
 
 See Showcase for visual on all types of menus and examples I've created.
@@ -55,7 +66,7 @@ Once you have done all of the above, you are ready to use this package!
 Have a look below to see how to implement the custom menus.
 # Showcase
 ## Simple App Using All Menus
-![SMenus showcase](showcase.gif)
+<img height="400" align="center"  alt="logo" src="https://raw.githubusercontent.com/svparekh/fluttermenus/main/showcase.gif"/>
 
 Showcases coming soon:
 ```markdown
