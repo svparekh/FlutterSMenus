@@ -47,8 +47,7 @@ class SMenuStyle {
   final MainAxisAlignment? headerAlignment;
   final EdgeInsets? padding;
   final BoxConstraints? size;
-
-  /// width/height: min = closed, max = open
+  final BoxBorder? border;
   final MainAxisAlignment? footerAlignment;
   final MainAxisAlignment? alignment;
   final Color? barColor;
@@ -58,6 +57,7 @@ class SMenuStyle {
     this.barColor,
     this.backgroundColor,
     this.size,
+    this.border,
     this.padding,
     this.borderRadius,
     this.headerAlignment,
@@ -350,7 +350,8 @@ class _SSlideMenuState extends SBaseMenuState<SSlideMenu> {
         decoration: BoxDecoration(
             color: widget.style?.backgroundColor ??
                 Theme.of(context).colorScheme.onPrimary,
-            borderRadius: widget.style?.borderRadius),
+            borderRadius: widget.style?.borderRadius,
+            border: widget.style?.border),
         padding:
             widget.style?.padding ?? const EdgeInsets.symmetric(horizontal: 5),
         constraints: widget.style?.size ??
@@ -649,7 +650,8 @@ class _SResizableMenuNoWrapperState
               decoration: BoxDecoration(
                   color: widget.style?.backgroundColor ??
                       Theme.of(context).colorScheme.onPrimary,
-                  borderRadius: widget.style?.borderRadius),
+                  borderRadius: widget.style?.borderRadius,
+                  border: widget.style?.border),
               padding: widget.style?.padding ??
                   const EdgeInsets.symmetric(horizontal: 5),
               constraints: widget.style?.size ??

@@ -21,12 +21,13 @@ See Showcase for visual on all types of menus and examples I've created.
   
 ## Menus
 
-|Name                 | Description                                                                                        |
-|---------------------|----------------------------------------------------------------------------------------------------|
-|SResiableMenu        |A menu that can be resized programatically or phsyically                                            |
-|SSlideMenu           |A menu that either slides in, slides in while body slides away, or body slides away to reveal menu  |
-|SDropdownMenuCascade |Classic dropdown menu [WIP]                                                                         |
-|SDropdownMenuMorph   |Dropdown popup menu using Hero [WIP]                                                                |
+| Name                 | Description                                                                                        |
+|----------------------|----------------------------------------------------------------------------------------------------|
+| SResiableMenu        | A menu that can be resized programatically or phsyically                                           |
+| SSlideMenu           | A menu that either slides in, slides in while body slides away, or body slides away to reveal menu |
+| SDropdownMenuCascade | Classic dropdown menu                                                                              |
+| SDropdownMenuMorph   | Dropdown popup menu using Hero                                                                     |
+
 
 # Getting started
 
@@ -53,7 +54,7 @@ $ flutter pub add flutter_smenus
 ## Import
 
 ```dart
-import 'package:flutter/smenus.dart'
+import 'package:flutter_smenus/flutter_smenus.dart'
 ```
 
 ## Use
@@ -61,6 +62,21 @@ Once you have done all of the above, you are ready to use this package!
 
 Have a look below to see how to implement the custom menus.
 # Showcase
+## Simple App Using All Menus
+![SMenus showcase](showcase.gif)
+
+Showcases coming soon:
+## Regular Menu
+### Resizable Menu
+#### Normal
+#### No Bar
+### Slide Menu
+#### Normal
+#### Only Menu
+#### Only Body
+## Dropdown Menu
+### Cascade
+### Morph
 
 
 # Code
@@ -183,7 +199,7 @@ Either ```items``` or ```builder``` must not be null
 | ```position```       | SMenuPosition?                         | SMenuPosition.left                | Which side of the screen the menu will be location                                                      |
 | ```enableSelector``` | bool?                                  | false                             | In the event your menu items are menu buttons, turn on this selector to show the current selected item. |
 | ```barrierColor```   | Color?                                 | true                              | When menu is open, this is the color overlayed on the body                                              |
-| ```enableGestures``` | bool?                                  | null                              | If gestures can open, close, or toggle the menu                                                         |
+| ```enableGestures``` | bool?                                  | null                              | If gestures can open, close, or toggle the menu [WIP]                                                         |
 | ```isBodyMovable```  | bool?                                  | true                              | Whether the body moves in the animation or not                                                          |
 | ```isMenuMovable```  | bool?                                  | true                              | Whether the menu moves in the animation or not                                                          |
 
@@ -390,6 +406,7 @@ SMenuStyle(
 | ```headerAlignment``` | MainAxisAlignment? | null    | NI                                                                                                                                                                                                                             |
 | ```padding```         | EdgeInsets?        | null    | The padding around the menu                                                                                                                                                                                                    |
 | ```size```            | BoxConstraints?    | null    | The size of the menu. For top or bottom positioned menu, use minHeight and maxHeight to set closed and open sizes respectively. For left or right positions, use minWidth and maxWidth for closed and open sizes respectively. |
+| ```border```          | BoxBorder?    | null    | The border to apply around the menu.                                                                                                                                                                                           |
 | ```footerAlignment``` | MainAxisAlignment? | null    | NI                                                                                                                                                                                                                             |
 | ```alignment```       | MainAxisAlignment? | null    | NI                                                                                                                                                                                                                             |
 | ```barColor```        | Color?             | null    | NI                                                                                                                                                                                                                             |

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smenus/dropdown.dart';
 import 'package:flutter_smenus/menu.dart';
 import 'package:flutter_smenus/menu_item.dart';
-import 'package:flutter_smenus/dropdown.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,15 +13,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter SMenus',
       theme: ThemeData(),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Flutter SMenus'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
 
   final String title;
 
@@ -36,24 +46,42 @@ class _MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> chosenFile = data[1];
   int selectedIndex = 0;
 
-  SMenuPosition _resizableMenuPosition = SMenuPosition.left;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         actions: const [
-          SDropdownMenuCascade(items: []),
-          SDropdownMenuMorph(items: [])
+          Padding(
+            padding: EdgeInsets.only(right: 12.0),
+            child: Center(
+              child: SizedBox.square(
+                dimension: 32,
+                child: SDropdownMenuCascade(
+                  style: SDropdownMenuStyle(
+                      alignment: SDropdownMenuAlignment.bottomLeft),
+                  items: [],
+                  icon: Icon(
+                    Icons.settings,
+                    size: 22,
+                  ),
+                ),
+              ),
+            ),
+          )
         ],
       ),
-      // Persistent console menu
+
+      // Persistent main menu
       body: SResizableMenu(
         enableSelector: true,
         controller: leftMenuController,
         resizable: false,
         position: SMenuPosition.left,
+        style: SMenuStyle(
+          size: BoxConstraints(minWidth: 52, maxWidth: 250),
+          border: Border.all(color: Colors.black12, width: 1),
+        ),
         header: TextButton(
             onPressed: () {
               leftMenuController.toggle();
@@ -65,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 : Icons.menu_open_outlined)),
         items: [
           SMenuItemButton(
-            title: 'Exercise Bank',
+            title: 'Home',
             isSelected: selectedIndex == 0,
             icon: Icons.home,
             onPressed: () {
@@ -75,9 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           SMenuItemButton(
-            title: 'Workout Builder',
+            title: 'A Page',
             isSelected: selectedIndex == 1,
-            icon: Icons.fitness_center,
+            icon: Icons.file_open,
             onPressed: () {
               setState(() {
                 selectedIndex = 1;
@@ -85,9 +113,9 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           SMenuItemButton(
-            title: 'Diet Planner',
+            title: 'Another Page',
             isSelected: selectedIndex == 2,
-            icon: Icons.food_bank,
+            icon: Icons.document_scanner,
             onPressed: () {
               setState(() {
                 selectedIndex = 2;
@@ -95,10 +123,12 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
         ],
-        // Details Menu
+
+        // Console Menu
         body: SResizableMenu(
           controller: consoleMenuController,
           position: SMenuPosition.bottom,
+
           items: [
             SMenuItemCustom(
               builder: (context, style, child) {
@@ -129,9 +159,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox.square(
                         dimension: 40,
                         child: Center(
-                          child: Icon(
-                            Icons.settings,
-                            size: 22,
+                          child: SDropdownMenuMorph(
+                            style: SDropdownMenuStyle(
+                                alignment: SDropdownMenuAlignment.topLeft),
+                            items: [],
+                            icon: Icon(Icons.menu),
                           ),
                         ),
                       ),
@@ -145,9 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ]),
           ),
 
-          // direction: Axis.horizontal,
-
-          // controller: controller,
+          // Details Menu
           body: SSlideMenu(
             style:
                 SMenuStyle(size: BoxConstraints(minWidth: 50, maxWidth: 400)),
