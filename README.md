@@ -5,7 +5,7 @@
 <a href="https://github.com/svparekh/fluttermenus/blob/main/LICENSE">  
   <img alt="GitHub" src="https://img.shields.io/github/license/svparekh/fluttermenus"> 
 </a>  
-<a href="https://github.com/svparekhfluttermenus">  
+<a href="https://pub.dev/packages/flutter_smenus">  
   <img alt="Pub Version" src="https://img.shields.io/pub/v/flutter_smenus" />
 </a>  
 <a>  
@@ -21,7 +21,7 @@ Almost any kind of menu can be created with this package with almost any style. 
 # Features
 
 See Showcase for visual on all types of menus and examples I've created.
-  
+
 ## Menus
 
 | Name                 | Description                                                                                        |
