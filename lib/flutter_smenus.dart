@@ -4,19 +4,24 @@ export 'dropdown.dart'
     show
         SDropdownMenuCascade,
         SDropdownMenuMorph,
+        SDropdownMenu,
         SDropdownMenuState,
         SDropdownMenuStyle,
+        SDropdownMenuAlignment,
         SMenuItemDropdown,
-        SDropdownMenuAlignment;
+        SMenuItemDropdownSelectable;
 export 'menu_item.dart' show SMenuItemButton, SMenuItemCustom;
 export 'menu.dart'
     show
-        SMenuController,
-        SMenuItemStyle,
-        SMenuStyle,
+        SBaseMenu,
+        SBaseMenuState,
         SResizableMenu,
         SResizableMenuNoWrapper,
         SSlideMenu,
+        SMenuController,
+        SMenuStyle,
         SMenuPosition,
-        SMenuState;
+        SMenuState,
+        SMenuItemStyle;
+
 export 'routes.dart' show FadePageRoute, SlidePageRoute, SlideDirection;

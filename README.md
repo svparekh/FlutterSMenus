@@ -66,6 +66,7 @@ Have a look below to see how to implement the custom menus.
 ![SMenus showcase](showcase.gif)
 
 Showcases coming soon:
+```markdown
 ## Regular Menu
 ### Resizable Menu
 #### Normal
@@ -77,7 +78,7 @@ Showcases coming soon:
 ## Dropdown Menu
 ### Cascade
 ### Morph
-
+```
 
 # Code
 
@@ -582,11 +583,24 @@ SMenuState.closing
 
 # Additional information
 
-More: -
+### More: 
+#### Additional Classes
 
-Contribute: -
+| Class                    | Object Type                          |
+|--------------------------|--------------------------------------|
+| ```FadePageRoute```      | PageRoute< T>                        |
+| ```SlidePageRoute```     | PageRoute< T>                        |
+| ```SlideDirection```     | Enum                                 |
+| ```SBaseMenu```          | Abstract Stateful Widget Class       |
+| ```SBaseMenuState```     | Abstract Stateful Widget State Class |
+| ```SDropdownMenu```      | Abstract Stateful Widget Class       |
+| ```SDropdownMenuState``` | Abstract Stateful Widget State Class |
 
-Issues: -
+
+
+### Contribute: -
+
+### Issues: -
 
 
 > Note: Some features may not work with custom children, this includes but is not limited to dropdown menus having nuances with values, having picked item displayed, or even the inkwell to display clicking. These work fine with ```SMenuItem```, but custom items may have issues. Use at your own risk.
