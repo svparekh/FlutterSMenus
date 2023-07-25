@@ -1,3 +1,3 @@
-## 0.0.1
+## 1.0.0
 
-* TODO: Describe initial release.
+* INITIAL RELEASE: Package officially released with four main types of menus. SMenuResizable, SSlideMenu, SDropdownMenuCascade, and SDropdownMenuMorph

@@ -1,7 +1,8 @@
 name: flutter_smenus
 description: Flutter package for all sorts of menus from dropdowns to sliding to resizable to navigation menus
 version: 1.0.0
-homepage:
+homepage: https://github.com/svparekh/FlutterMenus
+repository: https://github.com/svparekh/FlutterMenus
 
 environment:
   sdk: '>=2.19.4 <3.0.0'

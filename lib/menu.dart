@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'menu_item.dart';
-import 'routes.dart';
 
 // Default open and closed size if not given
 
@@ -338,7 +337,8 @@ class _SSlideMenuState extends SBaseMenuState<SSlideMenu> {
 
   @override
   Widget build(BuildContext context) {
-    Widget stackChild_1_menu = AnimatedBuilder(
+    // ignore: non_constant_identifier_names
+    Widget stackChild_menu = AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
         return Transform.translate(
@@ -383,7 +383,8 @@ class _SSlideMenuState extends SBaseMenuState<SSlideMenu> {
         ),
       ),
     );
-    Widget stackChild_2_barrier = AnimatedBuilder(
+    // ignore: non_constant_identifier_names
+    Widget stackChild_barrier = AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
         return Transform.translate(
@@ -418,7 +419,8 @@ class _SSlideMenuState extends SBaseMenuState<SSlideMenu> {
         ),
       ),
     );
-    Widget stackChild_3_body = AnimatedBuilder(
+    // ignore: non_constant_identifier_names
+    Widget stackChild_body = AnimatedBuilder(
       animation: _animationController,
       builder: (_, child) {
         return Transform.translate(
@@ -440,15 +442,15 @@ class _SSlideMenuState extends SBaseMenuState<SSlideMenu> {
     List<Widget> stackChildren = <Widget>[];
     if ((widget.isBodyMovable ?? true) && !(widget.isMenuMovable ?? true)) {
       stackChildren = [
-        stackChild_1_menu,
-        stackChild_3_body,
-        stackChild_2_barrier,
+        stackChild_menu,
+        stackChild_body,
+        stackChild_barrier,
       ];
     } else {
       stackChildren = [
-        stackChild_3_body,
-        stackChild_2_barrier,
-        stackChild_1_menu,
+        stackChild_body,
+        stackChild_barrier,
+        stackChild_menu,
       ];
     }
     return Stack(

@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
         resizable: false,
         position: SMenuPosition.left,
         style: SMenuStyle(
-          size: BoxConstraints(minWidth: 52, maxWidth: 250),
+          size: const BoxConstraints(minWidth: 52, maxWidth: 250),
           border: Border.all(color: Colors.black12, width: 1),
         ),
         header: TextButton(
@@ -179,8 +179,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // Details Menu
           body: SSlideMenu(
-            style:
-                SMenuStyle(size: BoxConstraints(minWidth: 50, maxWidth: 400)),
+            style: const SMenuStyle(
+                size: BoxConstraints(minWidth: 50, maxWidth: 400)),
             position: SMenuPosition.right,
             controller: detailsMenuController,
             isBodyMovable: false,
@@ -195,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
                               '$key:',
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ),
                         ],
