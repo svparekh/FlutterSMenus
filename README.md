@@ -194,6 +194,7 @@ Either ```items``` or ```builder``` must not be null
 | ```controller```     | SMenuController?                       | SMenuController()                 | Controller to open, close, or toggle menu                                                               |
 | ```items```          | List< SMenuItem>?                      | null                              | List of ```SMenuItem``` types that make the menu                                                        |
 | ```builder```        | Widget Function(BuildContext context)? | null                              | Builder function for custom menu                                                                        |
+| ```offset```         | Offset?                                | Offset.zero                       | The offset to apply when determining the start position of the menu                                     |
 | ```body```           | Widget?                                | Container()                       | The widget which contains the contents, or page                                                         |
 | ```header```         | Widget?                                | null                              | The widget at the top of the menu                                                                       |
 | ```footer```         | Widget?                                | null                              | The widget at the bottom of the menu                                                                    |
@@ -203,7 +204,7 @@ Either ```items``` or ```builder``` must not be null
 | ```position```       | SMenuPosition?                         | SMenuPosition.left                | Which side of the screen the menu will be location                                                      |
 | ```enableSelector``` | bool?                                  | false                             | In the event your menu items are menu buttons, turn on this selector to show the current selected item. |
 | ```barrierColor```   | Color?                                 | true                              | When menu is open, this is the color overlayed on the body                                              |
-| ```enableGestures``` | bool?                                  | null                              | If gestures can open, close, or toggle the menu [WIP]                                                         |
+| ```enableGestures``` | bool?                                  | null                              | If gestures can open, close, or toggle the menu [WIP]                                                   |
 | ```isBodyMovable```  | bool?                                  | true                              | Whether the body moves in the animation or not                                                          |
 | ```isMenuMovable```  | bool?                                  | true                              | Whether the menu moves in the animation or not                                                          |
 
@@ -414,7 +415,7 @@ SMenuStyle(
 | ```footerAlignment``` | MainAxisAlignment? | null    | NI                                                                                                                                                                                                                             |
 | ```alignment```       | MainAxisAlignment? | null    | NI                                                                                                                                                                                                                             |
 | ```barColor```        | Color?             | null    | NI                                                                                                                                                                                                                             |
-| ```backgroundColor``` | Color?             | null    | Color of the background of the men                                                                                                                                                                                             |
+| ```backgroundColor``` | Color?             | null    | Color of the background of the menu                                                                                                                                                                                             |
 
 
 

@@ -247,12 +247,13 @@ class SSlideMenu extends SBaseMenu {
       this.barrierColor,
       this.enableGestures,
       this.isBodyMovable = true,
-      this.isMenuMovable = true});
+      this.isMenuMovable = true,
+      this.offset = Offset.zero});
   final Widget? body;
   final bool? enableSelector;
   final bool? isMenuMovable;
   final bool? isBodyMovable;
-
+  final Offset? offset;
   final bool? enableGestures;
   final Color? barrierColor;
 
@@ -291,16 +292,16 @@ class _SSlideMenuState extends SBaseMenuState<SSlideMenu> {
     if (widget.isMenuMovable ?? true) {
       if (widget.position == SMenuPosition.right) {
         dx = MediaQuery.of(context).size.width - _animation.value;
-        dy = 0.0;
+        dy = widget.offset?.dy ?? 0.0;
       } else if (widget.position == SMenuPosition.top) {
-        dx = 0.0;
+        dx = widget.offset?.dx ?? 0.0;
         dy = _animation.value - mSize;
       } else if (widget.position == SMenuPosition.bottom) {
-        dx = 0.0;
+        dx = widget.offset?.dx ?? 0.0;
         dy = MediaQuery.of(context).size.height - _animation.value;
       } else {
         dx = _animation.value - mSize;
-        dy = 0.0;
+        dy = widget.offset?.dy ?? 0.0;
       }
     } else {
       dx = 0.0;
@@ -316,16 +317,16 @@ class _SSlideMenuState extends SBaseMenuState<SSlideMenu> {
     if (widget.isBodyMovable ?? true) {
       if (widget.position == SMenuPosition.right) {
         dx = -_animation.value;
-        dy = 0.0;
+        dy = widget.offset?.dy ?? 0.0;
       } else if (widget.position == SMenuPosition.top) {
-        dx = 0.0;
+        dx = widget.offset?.dx ?? 0.0;
         dy = _animation.value;
       } else if (widget.position == SMenuPosition.bottom) {
-        dx = 0.0;
+        dx = widget.offset?.dx ?? 0.0;
         dy = -_animation.value;
       } else {
         dx = _animation.value;
-        dy = 0.0;
+        dy = widget.offset?.dy ?? 0.0;
       }
     } else {
       dx = 0.0;
