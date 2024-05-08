@@ -1,27 +1,18 @@
 library flutter_smenus;
 
-export 'dropdown.dart'
+export 'dropdown.dart' show SDropdownMenuCascade, SDropdownMenuMorph;
+export 'menu_item.dart' show SMenuItem;
+export 'menu.dart' show SResizableMenu, SSlideMenu;
+export 'base.dart'
     show
-        SDropdownMenuCascade,
-        SDropdownMenuMorph,
-        SDropdownMenu,
-        SDropdownMenuState,
-        SDropdownMenuStyle,
-        SDropdownMenuAlignment,
-        SMenuItemDropdown,
-        SMenuItemDropdownSelectable;
-export 'menu_item.dart' show SMenuItemButton, SMenuItemCustom;
-export 'menu.dart'
-    show
+        SBaseDropdownMenu,
+        SBaseDropdownMenuState,
         SBaseMenu,
         SBaseMenuState,
-        SResizableMenu,
-        SResizableMenuNoWrapper,
-        SSlideMenu,
-        SMenuController,
+        SDropdownMenuStyle,
+        SMenuItemStyle,
         SMenuStyle,
+        SMenuController,
+        SDropdownMenuPosition,
         SMenuPosition,
-        SMenuState,
-        SMenuItemStyle;
-
-export 'routes.dart' show FadePageRoute, SlidePageRoute, SlideDirection;
+        SMenuState;

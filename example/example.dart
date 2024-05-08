@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_smenus/dropdown.dart';
 import 'package:flutter_smenus/menu.dart';
 import 'package:flutter_smenus/menu_item.dart';
+import 'package:flutter_smenus/base.dart';
+
+/// Note: This example also implements a custom indicator for the clickable
+/// menu buttons on the left, which extend the [SMenuItem] class. This is
+/// unrelated to the package, but it is implemented in this example.
 
 void main() {
   runApp(const MyApp());
@@ -23,16 +29,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -40,14 +36,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // A controller for each menu
   SMenuController detailsMenuController = SMenuController();
   SMenuController leftMenuController = SMenuController();
   SMenuController consoleMenuController = SMenuController();
+  // Data for details menu (current chosen item in ListView)
   Map<String, dynamic> chosenFile = data[1];
+  // the current selected menu button (custom class found below this class called SMenuItemButton)
   int selectedIndex = 0;
+  // Keys for the left hand side menu items and allows us to grab their heights, see below for more info.
+  List<GlobalKey> keys = List.generate(4, (index) => GlobalKey());
+  List<double> heights = [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        heights = keys
+            .map((key) => key.currentContext!.size!.height)
+            .toList()
+            .reversed
+            .toList();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    // a variable to hold the style for dropdown menu items that are in the middle,
+    // this was repetitive so it was made into a variable
+    const midDropdownButtonStyle = SMenuItemStyle(
+        borderRadius: BorderRadius.zero, alignment: MainAxisAlignment.center);
+    // Build app
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -57,14 +78,60 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Center(
               child: SizedBox.square(
                 dimension: 32,
+                // Settings dropdown menu that is on the right of the app bar
                 child: SDropdownMenuCascade(
-                  style: SDropdownMenuStyle(
-                      alignment: SDropdownMenuAlignment.bottomLeft),
-                  items: [],
+                  position: SDropdownMenuPosition.bottomLeft,
                   icon: Icon(
                     Icons.settings,
                     size: 22,
                   ),
+                  items: [
+                    // The top and bottom menu items have special
+                    // borders to create a rounded rectangle look of
+                    // the dropdown. This is because the dropdown's
+                    // background color was not set (so default is
+                    // transparent). This gives the appearance that
+                    // the menu is the same size as the items it
+                    // contains. Of course, this can be achieved
+                    // by setting a background and also setting the
+                    // dropdown menu's height/width properties. In
+                    // this case, the height was not set.
+                    SMenuItem.label(
+                      value: 1,
+                      title: Text('First Option (1)'),
+                      style: SMenuItemStyle(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                      ),
+                    ),
+                    SMenuItem.label(
+                      value: 2,
+                      title: Text('Option 2'),
+                      style: midDropdownButtonStyle,
+                    ),
+                    SMenuItem.label(
+                      value: 3,
+                      title: Text('Option 3'),
+                      style: midDropdownButtonStyle,
+                    ),
+                    SMenuItem.label(
+                      value: 4,
+                      title: Text('Option 4'),
+                      style: midDropdownButtonStyle,
+                    ),
+                    SMenuItem.label(
+                      value: 5,
+                      title: Text('Last Option (5)'),
+                      style: SMenuItemStyle(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(15),
+                          bottomRight: Radius.circular(15),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -74,26 +141,93 @@ class _MyHomePageState extends State<MyHomePage> {
 
       // Persistent main menu
       body: SResizableMenu(
-        enableSelector: true,
+        // specify size so buttons fit
+        closedSize: 60,
         controller: leftMenuController,
-        resizable: false,
+        resizable:
+            false, // Remove resize bar, user shouldn't be able to control size
         position: SMenuPosition.left,
         style: SMenuStyle(
-          size: const BoxConstraints(minWidth: 52, maxWidth: 250),
-          border: Border.all(color: Colors.black12, width: 1),
-        ),
+            border: Border.all(color: Colors.black12, width: 1),
+            borderRadius:
+                const BorderRadius.horizontal(right: Radius.circular(15))),
+        // add a button to toggle the menu
         header: TextButton(
             onPressed: () {
               leftMenuController.toggle();
               setState(() {});
             },
+            // Icon changes based on the state, could also use a listener on
+            // the controller state instead of doing this
             child: Icon((leftMenuController.state.value == SMenuState.closed ||
                     leftMenuController.state.value == SMenuState.closing)
                 ? Icons.menu
                 : Icons.menu_open_outlined)),
+        footer: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25),
+          child: Text(
+            'This is a basic footer',
+            textAlign: TextAlign.center,
+            maxLines: 1,
+          ),
+        ),
+        builder: (context, items) {
+          // Use the height of all widgets that are above it, and half the current
+          // button widget's height, to calculate the offset from the top of the menu
+          // (under the header) that the animated container that is the indicator
+          // should move.
+
+          double offset = 0.0;
+          int val = -1;
+          // calc offset
+          for (int i = 0; i < heights.length; i++) {
+            if (items![i] is SMenuItemButton) {
+              val++;
+            }
+
+            if (val == selectedIndex) {
+              offset += heights[i] / 2;
+
+              break;
+            }
+            if (i == 0) {
+              offset += 20 / 2;
+            }
+            offset += heights[i];
+          }
+
+          // Create a stack so that the animated container can lie on top of the buttons
+          return Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: items!,
+                ),
+              ),
+              // This animated container is the actual indicator that shows what
+              // button is selected. It animates between different button for a
+              // smooth transition effect.
+              AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOutCirc,
+                  // This top margin is the offset calculated earlier
+                  margin: EdgeInsets.only(top: offset, left: 2),
+                  height: 25,
+                  width: 5.0,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).colorScheme.onPrimary)),
+            ],
+          );
+        },
         items: [
+          // Creates our custom class SMenuItemButton which enables us to show
+          // that a button is selected. The key is given so that we can have a way
+          // to measure the height of the widget.
           SMenuItemButton(
-            title: 'Home',
+            key: keys[0],
+            text: 'Home',
             isSelected: selectedIndex == 0,
             icon: Icons.home,
             onPressed: () {
@@ -103,7 +237,8 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           SMenuItemButton(
-            title: 'A Page',
+            key: keys[1],
+            text: 'A Page',
             isSelected: selectedIndex == 1,
             icon: Icons.file_open,
             onPressed: () {
@@ -113,7 +248,8 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           SMenuItemButton(
-            title: 'Another Page',
+            key: keys[2],
+            text: 'Another Page',
             isSelected: selectedIndex == 2,
             icon: Icons.document_scanner,
             onPressed: () {
@@ -122,16 +258,30 @@ class _MyHomePageState extends State<MyHomePage> {
               });
             },
           ),
+          // Creates a literal label. Not clickable since this is not a dropdown menu.
+          SMenuItem.label(
+            key: keys[3],
+            value: 4,
+            title: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Text(
+                'This is a label',
+                textAlign: TextAlign.center,
+                maxLines: 1,
+              ),
+            ),
+            style: midDropdownButtonStyle,
+          ),
         ],
 
         // Console Menu
         body: SResizableMenu(
           controller: consoleMenuController,
           position: SMenuPosition.bottom,
-
           items: [
-            SMenuItemCustom(
-              builder: (context, style, child) {
+            // Creates a rounded rectangle container to act as some filler
+            SMenuItem(
+              builder: (context, style, child, onPressed) {
                 return Container(
                   height: MediaQuery.of(context).size.height / 3.5,
                   width: MediaQuery.of(context).size.width,
@@ -142,6 +292,8 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             )
           ],
+          // Create the header, with text on the left, and a dropdown menu along
+          // with the menu toggle button on the right
           header: SizedBox(
             height: 50,
             child: Row(
@@ -160,13 +312,60 @@ class _MyHomePageState extends State<MyHomePage> {
                         dimension: 40,
                         child: Center(
                           child: SDropdownMenuMorph(
-                            style: SDropdownMenuStyle(
-                                alignment: SDropdownMenuAlignment.topLeft),
-                            items: [],
+                            height: 150,
+                            position: SDropdownMenuPosition.topLeft,
                             icon: Icon(Icons.menu),
+                            items: [
+                              // The top and bottom menu items have special
+                              // borders to create a rounded rectangle look of
+                              // the dropdown. This is because the dropdown's
+                              // background color was not set (so default is
+                              // transparent). This gives the appearance that
+                              // the menu is the same size as the items it
+                              // contains. Of course, this can be achieved
+                              // by setting a background and also setting the
+                              // dropdown menu's height/width properties. In
+                              // this case, the height was not set.
+                              SMenuItem.label(
+                                value: 1,
+                                title: Text('First Option (1)'),
+                                style: SMenuItemStyle(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
+                                  ),
+                                ),
+                              ),
+                              SMenuItem.label(
+                                value: 2,
+                                title: Text('Option 2'),
+                                style: midDropdownButtonStyle,
+                              ),
+                              SMenuItem.label(
+                                value: 3,
+                                title: Text('Option 3'),
+                                style: midDropdownButtonStyle,
+                              ),
+                              SMenuItem.label(
+                                value: 4,
+                                title: Text('Option 4'),
+                                style: midDropdownButtonStyle,
+                              ),
+                              SMenuItem.label(
+                                value: 5,
+                                title: Text('Last Option (5)'),
+                                style: SMenuItemStyle(
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
+                      // Open/close the menu
                       TextButton(
                           onPressed: () {
                             consoleMenuController.toggle();
@@ -179,14 +378,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // Details Menu
           body: SSlideMenu(
-            style: const SMenuStyle(
-                size: BoxConstraints(minWidth: 50, maxWidth: 400)),
+            closedSize: 60,
+            openSize: 400,
             position: SMenuPosition.right,
             controller: detailsMenuController,
             isBodyMovable: false,
             items: [
+              // Create a menu item for each item in the currently chosen map
+              // These are the details shown when you click an item in the ListView
               for (String key in chosenFile.keys)
-                SMenuItemCustom(
+                SMenuItem(
                   child: Column(
                     children: [
                       Row(
@@ -205,6 +406,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
             ],
+            // Build the list view for the data. This is the actual "app"
             body: Container(
               color: Colors.white,
               child: Center(
@@ -230,6 +432,102 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               )),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// This is a custom class that extends the [SMenuItem]. All it does is create
+/// a custom widget using the child argument. This class exists to wrap certain
+/// variables, such as isSelected. This allows us to create a TextButton in place
+/// of the regular menu item. With value set to null (or onPressed not null),
+/// the dropdown menu will not place an [InkWell] over it, enabling us to click
+/// the button. In this case, we want to button to be a certain color when selected.
+/// This is a rudimentary implementation of a Menu Button.
+///
+/// Used in the left hand side menu in this example.
+class SMenuItemButton<T> extends SMenuItem {
+  const SMenuItemButton({
+    super.key,
+    super.onPressed,
+    super.style = const SMenuItemStyle(),
+    required this.icon,
+    this.selectedTextColor,
+    this.selectedIconColor,
+    this.textColor,
+    this.iconColor,
+    this.text,
+    this.isSelected = false,
+    this.onHover,
+    this.onLongPress,
+  });
+  final IconData icon;
+  final Color? selectedTextColor;
+  final Color? selectedIconColor;
+  final Color? textColor;
+  final Color? iconColor;
+  final String? text;
+  final bool isSelected;
+  final void Function(bool)? onHover;
+  final void Function()? onLongPress;
+
+  @override
+  Widget build(BuildContext context) {
+    return SMenuItem(
+      style: style,
+      onPressed: onPressed,
+      child: AnimatedContainer(
+        height: 45,
+        margin: const EdgeInsets.only(top: 5),
+        decoration: BoxDecoration(
+          borderRadius: style.borderRadius,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : style.bgColor ?? Theme.of(context).colorScheme.onPrimary,
+        ),
+        duration: const Duration(milliseconds: 250),
+        child: TextButton(
+          style: ButtonStyle(
+              shape: MaterialStatePropertyAll(
+                  RoundedRectangleBorder(borderRadius: style.borderRadius))),
+          onPressed: onPressed,
+          onHover: onHover,
+          onLongPress: onLongPress,
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: Icon(
+                  icon,
+                  color: isSelected
+                      ? selectedIconColor ??
+                          Theme.of(context).colorScheme.onPrimary
+                      : style.accentColor ??
+                          iconColor ??
+                          Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Text(
+                    text ?? '',
+                    style: TextStyle(
+                        color: isSelected
+                            ? selectedTextColor ??
+                                Theme.of(context).colorScheme.onPrimary
+                            : style.accentColor ??
+                                textColor ??
+                                Theme.of(context).colorScheme.primary),
+                    overflow: TextOverflow.fade,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
