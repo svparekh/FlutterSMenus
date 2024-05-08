@@ -41,7 +41,7 @@ class SSlideMenu extends SBaseMenu {
   final bool isMenuMovable;
   final bool isBodyMovable;
   final Offset offset;
-  final Widget? body;
+  final Widget? body; // TODO: move this to BaseMenu or even Base?
   final bool? enableGestures;
 
   @override

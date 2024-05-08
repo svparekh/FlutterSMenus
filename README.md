@@ -15,7 +15,7 @@
 </br>
 Custom menus designed to your imagination!
 
-A Flutter package for dropdown menus, many types of side menus, three dot menus, and popup menus.
+A Flutter package for dropdown menus, many types of side menus, sliding menus, resizable menus, three dot menus, and popup menus.
 Almost any kind of menu can be created with this package with almost any style. The basic types of menu and their customizability is shown below. This package is super easy to use and includes the ability to customize the menus to the your imagination. All menus support custom menu pages or custom menu items. There are animated resizable menus, dropdown menus, and traditional menus.
 
 # Features
@@ -24,9 +24,11 @@ See Showcase for visual on all types of menus and examples I've created.
 
 ## Menus
 
+These are the main menus included in this package. Each support custom menu items, see below.
+
 | Name                 | Description                                                                                        |
 |----------------------|----------------------------------------------------------------------------------------------------|
-| SResiableMenu        | A menu that can be resized programatically or phsyically                                           |
+| SResizableMenu       | A menu that can be resized programatically or phsyically                                           |
 | SSlideMenu           | A menu that either slides in, slides in while body slides away, or body slides away to reveal menu |
 | SDropdownMenuCascade | Classic dropdown menu                                                                              |
 | SDropdownMenuMorph   | Dropdown popup menu using Hero                                                                     |
@@ -42,7 +44,7 @@ Add this line to your pubspec.yaml
 
 ```yaml
 dependencies:
-    flutter_smenus: ^1.0.0
+    flutter_smenus: ^2.0.0
 ```
 
 or run this in your project's terminal
@@ -104,71 +106,30 @@ Either ```items``` or ```builder``` must not be null
 
 | Parameter            | Object Type                            | Default                           | Description                                                                                             |
 |----------------------|----------------------------------------|-----------------------------------|---------------------------------------------------------------------------------------------------------|
-| ```style```          | SMenuStyle?                            | SMenuStyle()                      | Color, border radius, size, padding, alignment. See ```SMenuStyle```                                    |
+| ```style```          | SMenuStyle                            | SMenuStyle()                      | Color, border radius, size, padding, alignment. See ```SMenuStyle```                                    |
 | ```controller```     | SMenuController?                       | SMenuController()                 | Controller to open, close, or toggle menu                                                               |
 | ```items```          | List< SMenuItem>?                      | null                              | List of ```SMenuItem``` types that make the menu                                                        |
-| ```builder```        | Widget Function(BuildContext context)? | null                              | Builder function for custom menu                                                                        |
-| ```body```           | Widget?                                | Container()                       | The widget which contains the contents, or page                                                         |
+| ```builder```        | Widget Function(BuildContext context, List<SMenuItem>? items)? | null                              | Builder function for custom menu                                                                        |
 | ```header```         | Widget?                                | null                              | The widget at the top of the menu                                                                       |
 | ```footer```         | Widget?                                | null                              | The widget at the bottom of the menu                                                                    |
 | ```scrollPhysics```  | ScrollPhysics?                         | null                              | How the menu should scroll                                                                              |
-| ```direction```      | Axis?                                  | Axis.vertical                     | Scroll direction, this is set automatically. Do not change this unless you know what you are doing.     |
-| ```duration```       | Duration?                              | const Duration(milliseconds: 250) | The duration for the animation of openning and closing the menu                                         |
-| ```position```       | SMenuPosition?                         | SMenuPosition.left                | Which side of the screen the menu will be location                                                      |
-| ```enableSelector``` | bool?                                  | false                             | In the event your menu items are menu buttons, turn on this selector to show the current selected item. |
-| ```resizable```      | bool?                                  | true                              | If resizing bar should show                                                                             |
+| ```scrollDirection```      | Axis                                  | Axis.vertical                     | Scroll direction, this is set automatically. Do not change this unless you know what you are doing.     |
+| ```duration```       | Duration                              | const Duration (milliseconds: 250) | The duration for the animation of openning and closing the menu                                         |
+| ```position```       | SMenuPosition                         | SMenuPosition.left                | Which side of the screen the menu will be location                                                      |
+| ```openSize``` | double                                  | 250.0                             | The size of the menu when it is open. Sets width for left or right position or height for top and bottom. |
+| ```closedSize``` | double                                  | 50.0                             | The size of the menu when it is closed. Sets width for left or right position or height for top and bottom. |
+| ```body```           | Widget?                                | Container()                       | The widget that is the contents, or page. This is whatever you want the menu to open over.                                                         |
+| ```resizable```      | bool                                  | true                              | If resizing bar should show                                                                             |
 | ```barColor```       | Color?                                 | null                              | Color of resizing bar                                                                                   |
 | ```barHoverColor```  | Color?                                 | null                              | Color of resizing bar when hovered                                                                      |
 | ```barSize```        | double?                                | 3                                 | Size of resizing bar                                                                                    |
 | ```barHoverSize```   | double?                                | 5                                 | Size of resizing bar when hovered                                                                       |
-
-
-</details>
-
-
-## SResizableMenuNoWrapper
-
-```dart
-Row(
-    children: [
-        SResizableMenuNoWrapper(
-            controller: SMenuController(),
-            position: SMenuPosition.left,
-            items: [],
-        ),
-        Expanded(child: Container()),
-    ],
-)
-```
-
-
-<details>
-<summary>Parameters</summary>
-
-Either ```items``` or ```builder``` must not be null
-
-| Parameter            | Object Type                            | Default                           | Description                                                                                             |
-|----------------------|----------------------------------------|-----------------------------------|---------------------------------------------------------------------------------------------------------|
-| ```style```          | SMenuStyle?                            | SMenuStyle()                      | Color, border radius, size, padding, alignment. See ```SMenuStyle```                                    |
-| ```controller```     | SMenuController?                       | SMenuController()                 | Controller to open, close, or toggle menu                                                               |
-| ```items```          | List< SMenuItem>?                      | null                              | List of ```SMenuItem``` types that make the menu                                                        |
-| ```builder```        | Widget Function(BuildContext context)? | null                              | Builder function for custom menu                                                                        |
-| ```header```         | Widget?                                | null                              | The widget at the top of the menu                                                                       |
-| ```footer```         | Widget?                                | null                              | The widget at the bottom of the menu                                                                    |
-| ```scrollPhysics```  | ScrollPhysics?                         | null                              | How the menu should scroll                                                                              |
-| ```direction```      | Axis?                                  | Axis.vertical                     | Scroll direction, this is set automatically. Do not change this unless you know what you are doing.     |
-| ```duration```       | Duration?                              | const Duration(milliseconds: 250) | The duration for the animation of openning and closing the menu                                         |
-| ```position```       | SMenuPosition?                         | SMenuPosition.left                | Which side of the screen the menu will be location                                                      |
-| ```enableSelector``` | bool?                                  | false                             | In the event your menu items are menu buttons, turn on this selector to show the current selected item. |
-| ```resizable```      | bool?                                  | true                              | If resizing bar should show                                                                             |
-| ```barColor```       | Color?                                 | null                              | Color of resizing bar                                                                                   |
-| ```barHoverColor```  | Color?                                 | null                              | Color of resizing bar when hovered                                                                      |
-| ```barSize```        | double?                                | 3                                 | Size of resizing bar                                                                                    |
-| ```barHoverSize```   | double?                                | 5                                 | Size of resizing bar when hovered                                                                       |
-
-
+| ```enableWrapper```   | bool                                | true                                 | If true, wraps the menu in a Flex widget with children being this menu and an Expanded widget that contains the body.                                                                       |
 
 </details>
+
+
+
 
 
 ## SSlideMenu
@@ -190,23 +151,23 @@ Either ```items``` or ```builder``` must not be null
 
 | Parameter            | Object Type                            | Default                           | Description                                                                                             |
 |----------------------|----------------------------------------|-----------------------------------|---------------------------------------------------------------------------------------------------------|
-| ```style```          | SMenuStyle?                            | SMenuStyle()                      | Color, border radius, size, padding, alignment. See ```SMenuStyle```                                    |
+| ```style```          | SMenuStyle                            | SMenuStyle()                      | Color, border radius, size, padding, alignment. See ```SMenuStyle```                                    |
 | ```controller```     | SMenuController?                       | SMenuController()                 | Controller to open, close, or toggle menu                                                               |
 | ```items```          | List< SMenuItem>?                      | null                              | List of ```SMenuItem``` types that make the menu                                                        |
-| ```builder```        | Widget Function(BuildContext context)? | null                              | Builder function for custom menu                                                                        |
-| ```offset```         | Offset?                                | Offset.zero                       | The offset to apply when determining the start position of the menu                                     |
-| ```body```           | Widget?                                | Container()                       | The widget which contains the contents, or page                                                         |
+| ```builder```        | Widget Function(BuildContext context, List<SMenuItem>? items)? | null                              | Builder function for custom menu                                                                        |
 | ```header```         | Widget?                                | null                              | The widget at the top of the menu                                                                       |
 | ```footer```         | Widget?                                | null                              | The widget at the bottom of the menu                                                                    |
 | ```scrollPhysics```  | ScrollPhysics?                         | null                              | How the menu should scroll                                                                              |
-| ```direction```      | Axis?                                  | Axis.vertical                     | Scroll direction, this is set automatically. Do not change this unless you know what you are doing.     |
-| ```duration```       | Duration?                              | const Duration(milliseconds: 250) | The duration for the animation of openning and closing the menu                                         |
-| ```position```       | SMenuPosition?                         | SMenuPosition.left                | Which side of the screen the menu will be location                                                      |
-| ```enableSelector``` | bool?                                  | false                             | In the event your menu items are menu buttons, turn on this selector to show the current selected item. |
-| ```barrierColor```   | Color?                                 | true                              | When menu is open, this is the color overlayed on the body                                              |
+| ```scrollDirection```      | Axis                                  | Axis.vertical                     | Scroll direction, this is set automatically. Do not change this unless you know what you are doing.     |
+| ```duration```       | Duration                              | const Duration (milliseconds: 250) | The duration for the animation of openning and closing the menu                                         |
+| ```position```       | SMenuPosition                         | SMenuPosition.left                | Which side of the screen the menu will be location                                                      |
+| ```openSize``` | double                                  | 250.0                             | The size of the menu when it is open. Sets width for left or right position or height for top and bottom. |
+| ```closedSize``` | double                                  | 50.0                             | The size of the menu when it is closed. Sets width for left or right position or height for top and bottom. |
+| ```offset```         | Offset                                | Offset.zero                       | The offset to apply when determining the start position of the menu                                     |
+| ```body```           | Widget?                                | null                       | The widget which contains the contents, or page                                                         |
 | ```enableGestures``` | bool?                                  | null                              | If gestures can open, close, or toggle the menu [WIP]                                                   |
-| ```isBodyMovable```  | bool?                                  | true                              | Whether the body moves in the animation or not                                                          |
-| ```isMenuMovable```  | bool?                                  | true                              | Whether the menu moves in the animation or not                                                          |
+| ```isBodyMovable```  | bool                                  | true                              | Whether the body moves in the animation or not                                                          |
+| ```isMenuMovable```  | bool                                  | true                              | Whether the menu moves in the animation or not                                                          |
 
 
 </details>
@@ -227,23 +188,24 @@ SDropdownMenuCascade(
 
 | Parameter          | Object Type                         | Default                           | Description                                                                                            |
 |--------------------|-------------------------------------|-----------------------------------|--------------------------------------------------------------------------------------------------------|
-| ```items```        | List< SMenuItem< T>>                | required                          | List of ```SMenuItem``` types, with a value, that make the menu                                        |
-| ```style```        | SDropdownMenuStyle?                 | SDropdownMenuStyle()              | Color, border radius, size, padding, alignment. See ```SDropdownMenuStyle```                           |
+| ```items```        | List< SMenuItem< T>>?                | required                          | List of ```SMenuItem``` types, with a value, that make the menu                                        |
+| ```style```        | SDropdownMenuStyle                 | SDropdownMenuStyle()              | Color, border radius, size, padding, alignment. See ```SDropdownMenuStyle```                           |
 | ```controller```   | SMenuController?                    | SMenuController()                 | Controller to open, close, or toggle menu                                                              |
 | ```header```       | Widget?                             | null                              | The widget at the top of the menu                                                                      |
 | ```footer```       | Widget?                             | null                              | The widget at the bottom of the menu                                                                   |
-| ```hideIcon```     | bool?                               | false                             | If icon should be hidden                                                                               |
-| ```duration```     | Duration?                           | const Duration(milliseconds: 250) | The duration for the animation of openning and closing the menu                                        |
+| ```duration```     | Duration                           | const Duration (milliseconds: 250) | The duration for the animation of openning and closing the menu                                        |
 | ```child```        | Widget?                             | null                              | Initial widget to display as the dropdown menu button                                                  |
 | ```icon```         | Widget?                             | null                              | Icon to display next to the child                                                                      |
-| ```leadingIcon```  | bool?                               | false                             | If Icon should come before text                                                                        |
-| ```onChange```     | void Function(T value, int index)?? | null                              | Function to call when the currently picked value of the dropdown is changed                            |
-| ```showSelected``` | bool?                               | true                              | If selected widget should be displayed when menu is closed                                             |
-| ```isSmall```      | bool?                               | false                             | Whether only the icon is shown or not                                                                  |
-| ```buttonStyle```  | SMenuItemStyle?                     | SMenuItemStyle()                  | The style of each item of the dropdown                                                                 |
-| ```barrierColor``` | Color?                              | Colors.black26                    | The color of the overlay that is underneath the expanded menu, covering all other things on the screen |
+| ```onChange```     | void Function(T value, int index)? | null                              | Function to call when the currently picked value of the dropdown is changed                            |
+| ```buttonStyle```  | SMenuItemStyle                     | SMenuItemStyle()                  | The style of each item of the dropdown                                                                 |
+| ```height``` | double                              | 250.0                    | The height of the popup menu |
+| ```width``` | double                              | 350.0                   | The width of the popup menu |
+| ```curve``` | Curve                              | Curves.easeInOutCirc                    | The animation curve to use when animating this menu |
+| ```position``` | SDropdownMenuPosition?                              | SDropdownMenuPosition. bottomCenter                    | The location, relative to the dropdown button, that the menu will open at |
+| ```builder``` | Widget Function(BuildContext context, List<SMenuItem>? items)?                              | null                    | Builder function for custom menu |
 
 </details>
+
 
 ## SDropdownMenuMorph
 
@@ -260,133 +222,73 @@ SDropdownMenuMorph(
 
 | Parameter          | Object Type                         | Default              | Description                                                                  |
 |--------------------|-------------------------------------|----------------------|------------------------------------------------------------------------------|
-| ```items```        | List< SMenuItem< T>>                | required             | List of ```SMenuItem``` types, with a value, that make the menu              |
-| ```style```        | SDropdownMenuStyle?                 | SDropdownMenuStyle() | Color, border radius, size, padding, alignment. See ```SDropdownMenuStyle``` |
-| ```controller```   | SMenuController?                    | SMenuController()    | Controller to open, close, or toggle menu                                    |
-| ```header```       | Widget?                             | null                 | The widget at the top of the menu                                            |
-| ```footer```       | Widget?                             | null                 | The widget at the bottom of the menu                                         |
-| ```hideIcon```     | bool?                               | false                | If icon should be hidden                                                     |
-| ```child```        | Widget?                             | null                 | Initial widget to display as the dropdown menu button                        |
-| ```icon```         | Widget?                             | null                 | Icon to display next to the child                                            |
-| ```leadingIcon```  | bool?                               | false                | If Icon should come before text                                              |
-| ```onChange```     | void Function(T value, int index)?? | null                 | Function to call when the currently picked value of the dropdown is changed  |
-| ```showSelected``` | bool?                               | true                 | If selected widget should be displayed when menu is closed                   |
-| ```isSmall```      | bool?                               | false                | Whether only the icon is shown or not                                        |
-| ```itemStyle```    | SMenuItemStyle?                     | SMenuItemStyle()     | The style of each item of the dropdown                                       |
+| ```items```        | List< SMenuItem< T>>?                | required                          | List of ```SMenuItem``` types, with a value, that make the menu                                        |
+| ```style```        | SDropdownMenuStyle                 | SDropdownMenuStyle()              | Color, border radius, size, padding, alignment. See ```SDropdownMenuStyle```                           |
+| ```controller```   | SMenuController?                    | SMenuController()                 | Controller to open, close, or toggle menu                                                              |
+| ```header```       | Widget?                             | null                              | The widget at the top of the menu                                                                      |
+| ```footer```       | Widget?                             | null                              | The widget at the bottom of the menu                                                                   |
+| ```duration```     | Duration                           | const Duration(milliseconds: 250) | The duration for the animation of openning and closing the menu                                        |
+| ```child```        | Widget?                             | null                              | Initial widget to display as the dropdown menu button                                                  |
+| ```icon```         | Widget?                             | null                              | Icon to display next to the child                                                                      |
+| ```onChange```     | void Function(T value, int index)? | null                              | Function to call when the currently picked value of the dropdown is changed                            |
+| ```buttonStyle```  | SMenuItemStyle                     | SMenuItemStyle()                  | The style of each item of the dropdown                                                                 |
+| ```height``` | double                              | 250.0                    | The height of the popup menu |
+| ```width``` | double                              | 350.0                   | The width of the popup menu |
+| ```curve``` | Curve                              | Curves.easeInOutCirc                    | The animation curve to use when animating this menu |
+| ```position``` | SDropdownMenuPosition?                              | SDropdownMenuPosition. bottomCenter                    | The location, relative to the dropdown button, that the menu will open at |
+| ```builder``` | Widget Function(BuildContext context, List<SMenuItem>? items)?                              | null                    | Builder function for custom menu |
 
 </details>
 
 
-## SMenuItemButton
 
-```dart
-SMenuItemButton(
-    icon: Icons.home,
-    value: 1,
-    title: Text('Home'),
-    isSelected: select,
-    onPressed: () {
-        setState((){
-            select = !select;
-        });
-    }
-)
-```
-
-<details>
-<summary>Parameters</summary>
-
-| Parameter               | Object Type      | Default          | Description                                                                                    |
-|-------------------------|------------------|------------------|------------------------------------------------------------------------------------------------|
-| ```icon```              | IconData         | required         | The icon shown on this button                                                                  |
-| ```style```             | SMenuItemStyle?  | SMenuItemStyle() | Color, border radius, size, padding, alignment. See ```SMenuItemStyle```                       |
-| ```value```             | T?               | null             | Value of this item, could be ```string```, ```int```, ```double```, etc.                       |
-| ```title```             | Widget?          | null             | The widget that represents the title or text that is displayed on this button next to the icon |
-| ```selectedTextColor``` | Color?           | null             | The color of text when the button is selected                                                  |
-| ```selectedIconColor``` | Color?           | null             | The color of the icon when the button is selectedu                                             |
-| ```textColor```         | Color?           | null             | The color of text when the button is not selected                                              |
-| ```iconColor```         | Color?           | null             | The color of icon when the button is not selected                                              |
-| ```isSelected```        | bool?            | false            | If this button is in selected mode, must be set in a setState to see change                    |
-| ```onPressed```         | void Function()? | null             | Action when button is pressed                                                                  |
-
-
-</details>
-
-
-## SMenuItemCustom
+## SMenuItem
 
 
 ```dart
-SMenuItemCustom(
-    value: 'Custom Item',
-    builder: () {
+SMenuItem(
+    value: 'one',
+    builder: (context, style, child, onPressed) {
         return Text('Menu Item');
-    }
+    },
 )
 ```
-
 
 <details>
 <summary>Parameters</summary>
 
-| Parameter     | Object Type                                                                  | Default          | Description                                                                                                                                                                                                    |
-|---------------|------------------------------------------------------------------------------|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ```child```   | Widget?                                                                      | Container()      | The widget that makes up the menu item                                                                                                                                                                         |
-| ```style```   | SMenuItemStyle?                                                              | SMenuItemStyle() | Color, border radius, size, padding, alignment. See ```SMenuItemStyle```                                                                                                                                       |
-| ```value```   | T?                                                                           | null             | Value of this item, could be ```string```, ```int```, ```double```, etc.                                                                                                                                       |
-| ```builder``` | Widget Function(BuildContext context, SMenuItemStyle? style, Widget? child)? | null             | If builder is not null, then the builder function will be used to make the menu item rather than the child. A builder function has parameters context, style, and child. This function should return a widget. |
-
+| Parameter | Object Type | Default | Description |
+| ------------- | ----------------------- | ---------------- | -- |
+| ```child``` | Widget? | Container() | The widget that makes up the menu item |
+| ```style``` | SMenuItemStyle | SMenuItemStyle() | Color, border radius, size, padding, alignment. See ```SMenuItemStyle``` |
+| ```value``` | T? | null | Value of this item, could be ```string```, ```int```, ```double```, etc. |
+| ```builder``` | Widget Function(BuildContext context, SMenuItemStyle style, Widget? child, void Function()? onPressed)? | null | If builder is not null, then the builder function will be used to make the menu item rather than the child. A builder function has parameters context, style, and child. This function should return a widget. |
+| ```preview``` | Widget? | self | If showSelected is enabled on a dropdown menu, then this widget is shown as the selected item on the dropdown menu button |
+| ```onPressed``` | void Function()? | null | Only provide this if you know what you are doing. This allows an action to be done by the item. Note for the dropdown menus : It places an InkWell over the item if it has a value and the onPressed function is null (default). If the value is null or a function is given, the item will no longer display a preview of the item that is selected and the dropdown menu will not close when the item is clicked. The onChange function will not be called. This means that all functionality of the item will have to be handled by the given function. It would also be best to use the builder. |
 
 </details>
-
-
-## SMenuItemDropdown
+<br/>
 
 ```dart
-SMenuItemDropdown(
+SMenuItem.label(
     value: 1,
-    title: Text('Dropdown Item')
+    title: Text("Option 1"),
 )
 ```
+
 
 <details>
 <summary>Parameters</summary>
 
-| Parameter       | Object Type      | Default          | Description                                                              |
-|-----------------|------------------|------------------|--------------------------------------------------------------------------|
-| ```value```     | T                | required         | Value of this item, could be ```string```, ```int```, ```double```, etc. |
-| ```leading```   | Widget?          | null             | The widget at the very left                                              |
-| ```title```     | Widget?          | null             | The main widget                                                          |
-| ```trailing```  | Widget?          | null             | The widget at the very right                                             |
-| ```style```     | SMenuItemStyle?  | SMenuItemStyle() | Color, border radius, size, padding, alignment. See ```SMenuItemStyle``` |
-| ```onPressed``` | void Function()? | null             | Called when this item is pressed                                         |
-
-
-
-</details>
-
-
-## SMenuItemDropdownSelectable
-
-ListTile version of ```SMenuItemDropdown```
-```dart
-SMenuItemDropdownSelectable(
-    value: 1,
-    title: Text('Dropdown Item')
-)
-```
-
-<details>
-<summary>Parameters</summary>
-
-| Parameter       | Object Type      | Default  | Description                                                              |
-|-----------------|------------------|----------|--------------------------------------------------------------------------|
-| ```value```     | T                | required | Value of this item, could be ```string```, ```int```, ```double```, etc. |
-| ```leading```   | Widget?          | null     | The widget at the very left                                              |
-| ```title```     | Widget?          | null     | The main widget                                                          |
-| ```trailing```  | Widget?          | null     | The widget at the very right                                             |
-| ```onPressed``` | void Function()? | null     | Called when this item is pressed                                         |
-
+| Parameter | Object Type | Default | Description |
+| ------------- | ----------------------- | ---------------- | -- |
+| ```title``` | Widget? | Container() | The widget that makes up the middle of the menu item |
+| ```trailing``` | Widget? | Container() | The widget that makes up the end of the menu item |
+| ```leading``` | Widget? | Container() | The widget that makes up the start of the menu item |
+| ```style``` | SMenuItemStyle | SMenuItemStyle() | Color, border radius, size, padding, etc.. See ```SMenuItemStyle``` |
+| ```value``` | T? | null | Value of this item, could be ```string```, ```int```, ```double```, etc. |
+| ```preview``` | Widget? | self | If showSelected is enabled on a dropdown menu, then this widget is shown as the selected item on the dropdown menu button |
+| ```onPressed``` | void Function()? | null | Only provide this if you know what you are doing. This allows an action to be done by the item. Note for the dropdown menus : It places an InkWell over the item if it has a value and the onPressed function is null (default). If the value is null or a function is given, the item will no longer display a preview of the item that is selected and the dropdown menu will not close when the item is clicked. The onChange function will not be called. This means that all functionality of the item will have to be handled by the given function. It would also be best to use the builder. |
 
 
 </details>
@@ -396,28 +298,26 @@ SMenuItemDropdownSelectable(
 
 
 ```dart
-SMenuStyle(
-    borderRadius: BorderRadius.circular(15),
-    size: BoxContraints(minWidth: 50, maxWidth: 250)
-)
+var style = SMenuStyle(
+    borderRadius: BorderRadius.circular(7),
+);
+// You can copy any style
+var style2 = style.copyWith(
+    barrierColor: Colors.black12,
+);
 ```
 
 <details>
 <summary>Parameters</summary>
 
-| Parameter             | Object Type        | Default | Description                                                                                                                                                                                                                    |
-|-----------------------|--------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ```borderRadius```    | BorderRadius?      | null    | The amount and style of the border radius around the menu                                                                                                                                                                      |
-| ```headerAlignment``` | MainAxisAlignment? | null    | NI                                                                                                                                                                                                                             |
-| ```padding```         | EdgeInsets?        | null    | The padding around the menu                                                                                                                                                                                                    |
-| ```size```            | BoxConstraints?    | null    | The size of the menu. For top or bottom positioned menu, use minHeight and maxHeight to set closed and open sizes respectively. For left or right positions, use minWidth and maxWidth for closed and open sizes respectively. |
-| ```border```          | BoxBorder?    | null    | The border to apply around the menu.                                                                                                                                                                                           |
-| ```footerAlignment``` | MainAxisAlignment? | null    | NI                                                                                                                                                                                                                             |
-| ```alignment```       | MainAxisAlignment? | null    | NI                                                                                                                                                                                                                             |
-| ```barColor```        | Color?             | null    | NI                                                                                                                                                                                                                             |
-| ```backgroundColor``` | Color?             | null    | Color of the background of the menu                                                                                                                                                                                             |
-
-
+| Parameter | Object Type | Default | Description |
+|------------|----------|---------|----------------------|
+| ```borderRadius``` | BorderRadius | BorderRadius.circular(15) | The amount and style of the border radius around the menu |
+| ```padding``` | EdgeInsets? | null | The padding around the menu |
+| ```border``` | BoxBorder? | null | The border to apply around the menu. |
+| ```alignment``` | CrossAxisAlignment? | null | Aligns the column that makes up the menu's  cross axis |
+| ```barrierColor``` | Color | Colors.black26 | For slide menu, the color that is the background of the screen when the menu opens. Usually is translucent so the app can still be seen. This is the same region where "clicking off" the menu will close it. Below menu but on top of menu body. |
+| ```backgroundColor``` | Color? | null | Color of the background of the menu |
 
 </details>
 
@@ -425,26 +325,32 @@ SMenuStyle(
 ## SDropdownMenuStyle
 
 ```dart
-SDropdownMenuStyle(
-    borderRadius: BorderRadius.circular(15),
-)
+var style = SDropdownMenuStyle(
+    borderRadius: BorderRadius.circular(7),
+);
+// You can copy any style
+var style2 = style.copyWith(
+    barrierColor: Colors.black12,
+);
 ```
 
 <details>
 <summary>Parameters</summary>
 
-| Parameter          | Object Type             | Default                             | Description                                                                    |
+| Parameter | Object Type | Default | Description |
 |--------------------|-------------------------|-------------------------------------|--------------------------------------------------------------------------------|
-| ```alignment```    | SDropdownMenuAlignment? | SDropdownMenuAlignment.bottomCenter | Which way the dropdown should open and be positioned                           |
-| ```constraints```  | BoxConstraints?         | null                                | The constraints on the size of the dropdown menu                               |
-| ```offset```       | Offset?                 | null                                | The offset to apply when determining the opening position of the dropdown menu |
-| ```width```        | double                  | 250                                 | (required) The width of the menu                                               |
-| ```height```       | double?                 | null                                | The height of the menu                                                         |
-| ```elevation```    | double?                 | null                                | The elavation to apply to the menu background                                  |
-| ```color```        | Color?                  | null                                | The color of the menu background                                               |
-| ```padding```      | EdgeInsets?             | null                                | The padding around the menu                                                    |
-| ```borderRadius``` | BorderRadius?           | null                                | The amount and shape of border radius to apply to the menu                     |
-
+| ```borderRadius``` | BorderRadius | BorderRadius.circular(15) | The border radius to apply to the menu |
+| ```elevation``` | double? | null | The elavation to apply to the menu background |
+| ```color``` | Color? | Colors.transparent | The color of the menu background |
+| ```padding``` | EdgeInsets? | null | The padding around the menu |
+| ```border``` | BoxBorder? | null | The border of the menu |
+| ```constraints``` | BoxConstraints? | null | The constraints on the size of the dropdown menu |
+| ```barrierColor``` | Color | Colors.black26 | For dropdown menus or slide menus, the color that is the background of the screen when the menu opens. Usually is translucent so the app can still be seen. This is the same region where "clicking off" the menu will close it. Below menu but on top of menu body. |
+| ```offset``` | Offset? | null | Add an offset to the position of the menu that has been  calculated from ```SDropdownMenuPosition```. Moves the top left of the dropdown relative to the top left of the button after the calculation. |
+| ```hideIcon``` | bool | false | If true, the icon provided will not show |
+| ```leadingIcon``` | bool | false | If true, the icon will move to left of text |
+| ```showSelected``` | bool | false | If true, the selected object's preview widget will replace the text and icon on the dropdown button to show what is selected, default is false. |
+| ```isSmall``` | bool | true | If true, doesn't show the selected item, doesn't show the child, only shows the icon. If `hideIcon` is also true the dropdown button will be an empty button according to the ```SMenuItemStyle``` that it might have been given. |
 
 </details>
 
@@ -452,9 +358,13 @@ SDropdownMenuStyle(
 ## SMenuItemStyle
 
 ```dart
-SMenuItemStyle(
-    borderRadius: BorderRadius.circular(15),
-)
+var style = SMenuItemStyle(
+    borderRadius: BorderRadius.circular(7),
+);
+// You can copy any style
+var style2 = style.copyWith(
+    accentColor: Colors.amber,
+);
 ```
 
 <details>
@@ -462,18 +372,16 @@ SMenuItemStyle(
 
 | Parameter                 | Object Type        | Default | Description                                                                              |
 |---------------------------|--------------------|---------|------------------------------------------------------------------------------------------|
-| ```mainAxisAlignment```   | MainAxisAlignment? | null    | NI                                                                                       |
-| ```borderRadius```        | BorderRadius?      | null    | The amount and shape of border radius to apply to the menu                               |
-| ```shape```               | OutlinedBorder?    | null    | The shape of the widget that makes up the item                                           |
+| ```alignment```   | MainAxisAlignment | MainAxisAlignment.start    | The alignment of the flex widget the makes up the item |
+| ```borderRadius```        | BorderRadius      | BorderRadius.circular(15)    | The border radius to apply to the menu item                              |
+| ```shape```               | OutlinedBorder?    | null    | The shape of the item, overwrites border radius for the item (contained in shape) |
 | ```elevation```           | double?            | null    | The elavation to apply to the item                                                       |
 | ```padding```             | EdgeInsets?        | null    | The padding around the menu item                                                         |
-| ```constraints```         | BoxConstraints?    | null    | The constraints on the size of the item                                                  |
-| ```width```               | double             | null    | The width of the menu item                                                               |
+| ```width```               | double?             | null    | The width of the menu item                                                               |
 | ```height```              | double?            | null    | The height of the menu item                                                              |
 | ```accentColor```         | Color?             | null    | The accent, or primary, color of the item. This is applied to things like icons and text |
-| ```selectedAccentColor``` | Color?             | null    | The accent color when the item is selected                                               |
 | ```bgColor```             | Color?             | null    | The background color                                                                     |
-| ```selectedBgColor```     | Color?             | null    | The background color when the item is selected                                           |
+| ```mouseCursor```     | MouseCursor?             | null    | The cursor of the mouse when hovering over the item |
 
 
 </details>
@@ -506,30 +414,32 @@ SMenuPosition.isHorizontal
 </details>
 
 
-## SDropdownMenuAlignment
+## SDropdownMenuPosition
 
 ```dart
-SDropdownMenuAlignment.topLeft
-SDropdownMenuAlignment.topCenter
-SDropdownMenuAlignment.topRight
-SDropdownMenuAlignment.centerLeft
-SDropdownMenuAlignment.center
-SDropdownMenuAlignment.centerRight
-SDropdownMenuAlignment.bottomLeft
-SDropdownMenuAlignment.bottomCenter
-SDropdownMenuAlignment.bottomRight
+SDropdownMenuPosition.topLeft
+SDropdownMenuPosition.topCenter
+SDropdownMenuPosition.topRight
+SDropdownMenuPosition.centerLeft
+SDropdownMenuPosition.center
+SDropdownMenuPosition.centerRight
+SDropdownMenuPosition.bottomLeft
+SDropdownMenuPosition.bottomCenter
+SDropdownMenuPosition.bottomRight
 ```
 
 <details>
 <summary>More Information</summary>
 
-Dropdown button is located at the center. The dropdown will open in these directions as specificed by the alignment:
+Imagine the dropdown button is located at the center of a 2D space. The dropdown will open in these directions as specificed by the position:
 
 |             |               |              |
 |-------------|---------------|--------------|
 | Top Left    | Top Center    | Top Right    |
 | Center Left | Center        | Center Right |
 | Bottom Left | Bottom Center | Bottom RIght |
+
+The center is where the dropdown menu button is, so if position is set to that the button will be covered.
 
 </details>
 
@@ -592,13 +502,10 @@ SMenuState.closing
 
 | Class                    | Object Type                          |
 |--------------------------|--------------------------------------|
-| ```FadePageRoute```      | PageRoute< T>                        |
-| ```SlidePageRoute```     | PageRoute< T>                        |
-| ```SlideDirection```     | Enum                                 |
 | ```SBaseMenu```          | Abstract Stateful Widget Class       |
 | ```SBaseMenuState```     | Abstract Stateful Widget State Class |
-| ```SDropdownMenu```      | Abstract Stateful Widget Class       |
-| ```SDropdownMenuState``` | Abstract Stateful Widget State Class |
+| ```SBaseDropdownMenu```      | Abstract Stateful Widget Class       |
+| ```SBaseDropdownMenuState``` | Abstract Stateful Widget State Class |
 
 
 

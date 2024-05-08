@@ -25,12 +25,12 @@ class SMenuItem<T> extends StatelessWidget {
   /// Only provide this if you know what you are doing.
   /// This allows an action to be done by the item.
   /// Note for the [SBaseDropdownMenu] : It places an InkWell over the
-  /// item if it has a value and the onPressed functions are null
+  /// item if it has a value and the onPressed function is null
   /// (default). If the value is null or a function is given, the item will no
   /// longer display a preview of the item that is selected and the dropdown
   /// menu will not close when the item is clicked. The onChange function will
   /// not be called. This means that all functionality of the item will have
-  /// to be handled by the given function.
+  /// to be handled by the given function. It would also be best to use the builder.
   final void Function()? onPressed;
 
   // Custom Menu Item properties
@@ -60,7 +60,9 @@ class SMenuItem<T> extends StatelessWidget {
         title = null,
         onToggle = null,
         toggled = null,
-        type = SMenuItemType.custom;
+        type = SMenuItemType.custom,
+        assert(!(child == null && builder == null),
+            "SMenuItem error: A child or a builder must be provided.");
 
   const SMenuItem.label({
     super.key,
