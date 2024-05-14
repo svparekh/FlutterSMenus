@@ -5,7 +5,7 @@ homepage: https://github.com/svparekh/FlutterMenus
 repository: https://github.com/svparekh/FlutterMenus
 
 environment:
-  sdk: '>=2.19.4 <3.0.0'
+  sdk: '>=2.19.4 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
