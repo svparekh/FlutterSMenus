@@ -68,22 +68,8 @@ Once you have done all of the above, you are ready to use this package!
 Have a look below to see how to implement the custom menus.
 # Showcase
 ## Simple App Using All Menus
-<img height="400" align="center"  alt="logo" src="https://raw.githubusercontent.com/svparekh/fluttermenus/main/showcase.gif"/>
+<img height="400" align="center"  alt="All Menu Showcase" src="https://raw.githubusercontent.com/svparekh/fluttermenus/main/full_example.gif"/>
 
-Showcases coming soon:
-```markdown
-## Regular Menu
-### Resizable Menu
-#### Normal
-#### No Bar
-### Slide Menu
-#### Normal
-#### Only Menu
-#### Only Body
-## Dropdown Menu
-### Cascade
-### Morph
-```
 
 # Code
 
@@ -177,6 +163,9 @@ Either ```items``` or ```builder``` must not be null
 
 
 ## SDropdownMenuCascade
+
+<img height="400" align="center"  alt="Cascade Dropdown Menu Showcase" src="https://raw.githubusercontent.com/svparekh/fluttermenus/main/cascade_example.gif"/>
+
 
 ```dart
 SDropdownMenuCascade(
