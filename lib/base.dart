@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'menu_item.dart';
+
+// TODO: Add ability to change splash color, radius, etc. to menu item and dropdown button
 
 /// All possible menu states
 enum SMenuState { open, closed, opening, closing }
@@ -259,9 +262,13 @@ class SMenuItemStyle {
   /// The cursor of the mouse when hovering over the item
   final MouseCursor? mouseCursor;
 
+  /// The border to apply on the item.
+  final BorderSide? side;
+
   const SMenuItemStyle({
     this.borderRadius = const BorderRadius.all(Radius.circular(15)),
     this.accentColor,
+    this.side,
     this.bgColor,
     this.mouseCursor,
     this.alignment = MainAxisAlignment.start,
@@ -284,18 +291,21 @@ class SMenuItemStyle {
     final double? height,
     final Color? accentColor,
     final Color? bgColor,
+    final MouseCursor? mouseCursor,
+    final BorderSide? side,
   }) {
     return SMenuItemStyle(
-      elevation: elevation ?? this.elevation,
-      alignment: alignment ?? this.alignment,
-      shape: shape ?? this.shape,
-      width: width ?? this.width,
-      borderRadius: borderRadius ?? this.borderRadius,
-      padding: padding ?? this.padding,
-      height: height ?? this.height,
-      accentColor: accentColor ?? this.accentColor,
-      bgColor: bgColor ?? this.bgColor,
-    );
+        elevation: elevation ?? this.elevation,
+        alignment: alignment ?? this.alignment,
+        shape: shape ?? this.shape,
+        width: width ?? this.width,
+        borderRadius: borderRadius ?? this.borderRadius,
+        padding: padding ?? this.padding,
+        height: height ?? this.height,
+        accentColor: accentColor ?? this.accentColor,
+        bgColor: bgColor ?? this.bgColor,
+        mouseCursor: mouseCursor ?? this.mouseCursor,
+        side: side ?? this.side);
   }
 }
 
@@ -308,17 +318,20 @@ class SMenuItemStyle {
 abstract class SBase extends StatefulWidget {
   const SBase({
     super.key,
+    required this.items,
     this.duration = const Duration(milliseconds: 250),
     this.curve = Curves.easeInOutCirc,
-    this.items,
+    this.performanceMode = false,
     this.header,
     this.footer,
     this.controller,
     this.builder,
-  }) : assert(
-          !(builder == null && items == null),
-          "SMenus: Menus require 'builder' and/or 'items' argument to be populated.",
-        );
+  });
+
+  /// If true, performance mode is enabled. This means a [ListView] with lazy loading will
+  /// be used in the menu rather than a [SingleChildScrollView] and [Flex] which
+  /// load all items at once. Doesn't work if using a builder.
+  final bool performanceMode;
 
   /// The animation duration
   final Duration duration;
@@ -330,10 +343,11 @@ abstract class SBase extends StatefulWidget {
   final SMenuController? controller;
 
   /// Items that make up the menu
-  final List<SMenuItem>? items;
+  final List<SMenuItem> items;
 
-  /// The builder that makes the menu
-  final Widget Function(BuildContext context, List<SMenuItem>? items)? builder;
+  /// The builder that makes the menu. Completely overwrites the menu for complete
+  /// customization. This means many menu parameters will not work.
+  final Widget Function(BuildContext context, List<SMenuItem> items)? builder;
 
   /// The widget at the top of the menu
   final Widget? header;
@@ -370,6 +384,100 @@ abstract class SBaseState<T extends SBase> extends State<T>
   /// The function responsible for performing the toggle menu task. Controller toggle
   /// function is set to this function.
   void toggleMenu();
+
+  /// Given the items and possibly a builder , build the actual menu. Uses a
+  /// [SingleChildScrollView] if performance mode is off, or uses a [ListView]
+  /// for lazy loading if performance mode is on. The builder can be used
+  /// to completely customize the menu actually shown.
+  dynamic buildMenu({void Function(MapEntry<int, SMenuItem> element)? onTap}) {
+    final Widget menu;
+    // If builder is given, use it.
+    if (widget.builder != null) {
+      menu = widget.builder!(context, widget.items);
+    } else {
+      // Otherwise create the menu
+
+      // Wrap items in inkwell if clickable
+      final items = widget.items.asMap().entries.map((element) {
+        final SMenuItem item = element.value;
+        // Add a button effect only if item is clickable or switchable
+        // && item.type != SMenuItemType.switchable
+        if (item.type != SMenuItemType.clickable) {
+          return item;
+        }
+        return Material(
+          shape: item.style.shape ??
+              RoundedRectangleBorder(
+                  side: item.style.side ?? BorderSide.none,
+                  borderRadius: item.style.borderRadius),
+          color: item.style.bgColor ?? Colors.transparent,
+          child: InkWell(
+            // TODO: Allow changing of colors, not just apply opacity
+            highlightColor: item.style.accentColor?.withOpacity(0.2),
+            hoverColor: item.style.accentColor?.withOpacity(0.1),
+            splashColor: item.style.accentColor?.withOpacity(0.05),
+            customBorder: item.style.shape,
+            mouseCursor: item.style.mouseCursor,
+            borderRadius: item.style.borderRadius,
+            onTap: () {
+              // TODO: Flip?
+              // Internal handling of onTap
+              if (onTap != null) onTap(element);
+              // Followed by user handling of onTap
+              if (item.onPressed != null) item.onPressed!();
+              // if (element.value.onToggle != null) {
+              //   setState(() {
+              //     if (element.value.toggled == null) {
+              //       element.value.onToggle!(true);
+              //     } else {
+              //       element.value.onToggle!(!element.value.toggled!);
+              //     }
+              //   });
+              // }
+            },
+            child: item,
+          ),
+        );
+      }).toList();
+
+      // In performance mode, we use a ListView to be able to lazy load
+      if (widget.performanceMode) {
+        // TODO: what to do on style.padding?
+        menu = ListView(
+          shrinkWrap: true,
+          children: items,
+        );
+      } else {
+        // Otherwise, if performance mode is off, use a SingleChildScrollView
+        menu = SingleChildScrollView(
+          // TODO: implement scroll direction
+          // scrollDirection: widget.scrollDirection,
+          child: Flex(
+            mainAxisSize: MainAxisSize.min,
+            direction: Axis.vertical, //widget.scrollDirection,
+            children: items,
+          ),
+        );
+      }
+    }
+
+    // TODO: Change column to flex
+    // Add in the header and footer in a flex widget
+    return Column(
+      // TODO: what to do on style.alignment?
+      // crossAxisAlignment: widget.style.alignment ?? CrossAxisAlignment.center,
+      children: [
+        // Header
+        if (widget.header != null) widget.header!,
+        // Menu
+        Expanded(
+          child: menu,
+        ),
+        // Footer
+        if (widget.footer != null) widget.footer!,
+      ],
+    );
+  }
 
   @override
   void initState() {
@@ -425,7 +533,7 @@ abstract class SBaseMenu extends SBase {
   const SBaseMenu({
     super.key,
     super.duration,
-    super.items,
+    required super.items,
     super.builder,
     super.header,
     super.footer,
@@ -501,23 +609,6 @@ abstract class SBaseMenuState<T extends SBaseMenu> extends SBaseState<T> {
   void dispose() {
     animationController.dispose();
     super.dispose();
-  }
-
-  /// Given the builder and items, build the actual menu. Uses a
-  /// [SingleChildScrollView] if builder is null, or directly uses builder if given.
-  Widget buildChild() {
-    if (widget.builder == null) {
-      return SingleChildScrollView(
-        scrollDirection: widget.scrollDirection,
-        child: Flex(
-          mainAxisSize: MainAxisSize.min,
-          direction: widget.scrollDirection,
-          children: widget.items!,
-        ),
-      );
-    } else {
-      return widget.builder!(context, widget.items);
-    }
   }
 
   @override

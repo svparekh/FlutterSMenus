@@ -113,6 +113,8 @@ class SDropdownMenuPopup<T> extends StatelessWidget {
   final Offset position;
   final double? width; // TODO: implement width and height
   final double? height;
+  final dynamic Function(
+      {void Function(MapEntry<int, SMenuItem> element)? onTap}) buildMenu;
 
   const SDropdownMenuPopup({
     super.key,
@@ -125,6 +127,7 @@ class SDropdownMenuPopup<T> extends StatelessWidget {
     required this.style,
     this.width,
     this.height,
+    required this.buildMenu,
   });
 
   @override
@@ -141,48 +144,21 @@ class SDropdownMenuPopup<T> extends StatelessWidget {
               decoration: BoxDecoration(
                   border: style.border,
                   borderRadius: style.borderRadius,
-                  color: style.color ?? Colors.transparent),
+                  color:
+                      style.color ?? Theme.of(context).colorScheme.background),
               constraints: style.constraints ??
                   BoxConstraints(
                       maxHeight: height ?? 350,
                       maxWidth: width ?? 250,
                       minHeight: height ?? 10),
               child: SizedBox(
-                height: height ?? 350,
-                child: ListView(
-                  // padding: style?.padding ?? EdgeInsets.zero,
-                  // shrinkWrap: true,
-                  children: items.asMap().entries.map((element) {
-                    final SMenuItem item = element.value;
-                    // Add a button effect is this item has a value
-                    if (item.value == null) {
-                      return item;
+                  height: height ?? 350,
+                  child: buildMenu(onTap: (element) {
+                    if (element.value.value != null) {
+                      Navigator.pop(
+                          context, MapEntry(element.key, element.value));
                     }
-                    if (item.onPressed != null) {
-                      return item;
-                    }
-
-                    return Material(
-                      shape: item.style.shape ??
-                          RoundedRectangleBorder(
-                              borderRadius: item.style.borderRadius),
-                      // borderRadius: item.style.borderRadius ??
-                      //     BorderRadius.circular(15),
-                      color: item.style.bgColor ??
-                          Theme.of(context).colorScheme.onPrimary,
-                      child: InkWell(
-                        borderRadius: item.style.borderRadius,
-                        onTap: () {
-                          if (item.value != null) {
-                            Navigator.pop(context, MapEntry(element.key, item));
-                          }
-                        },
-                        child: item,
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
+                  })),
             ),
           ),
         )

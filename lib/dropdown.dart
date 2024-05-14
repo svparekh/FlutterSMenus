@@ -4,6 +4,11 @@ import 'base.dart';
 import 'helper.dart';
 import 'menu_item.dart';
 
+// TODO: Add builder to dropdowns
+
+/// A dropdown menu that uses an Overlay. This is a classic type of dropdown menu.
+/// Use a SMenuItem.clickable if you would like the onChange function of
+/// this dropdown to run. The item's value will be made available through it.
 class SDropdownMenuCascade<T> extends SBaseDropdownMenu<T> {
   const SDropdownMenuCascade({
     required super.items,
@@ -96,14 +101,16 @@ class _SDropdownMenuCascadeState<T>
       child: OutlinedButton(
         key: _renderKey,
         style: OutlinedButton.styleFrom(
+          side: widget.buttonStyle.side,
           enabledMouseCursor: widget.buttonStyle.mouseCursor,
           padding: widget.buttonStyle.padding ?? const EdgeInsets.all(0),
           backgroundColor: widget.buttonStyle.bgColor ??
-              Theme.of(context).colorScheme.onPrimary,
+              Theme.of(context).colorScheme.background,
           elevation: widget.buttonStyle.elevation,
           foregroundColor: widget.buttonStyle.accentColor,
           shape: widget.buttonStyle.shape ??
-              RoundedRectangleBorder(borderRadius: widget.style.borderRadius),
+              RoundedRectangleBorder(
+                  borderRadius: widget.buttonStyle.borderRadius),
         ),
         onPressed: toggleMenu,
         child: Row(
@@ -112,21 +119,28 @@ class _SDropdownMenuCascadeState<T>
               widget.style.leadingIcon ? TextDirection.rtl : TextDirection.ltr,
           mainAxisSize: MainAxisSize.min,
           children: [
+            // if the widget is not set to be small, place a child, otherwise go to icon
             if (!(widget.style.isSmall))
-              if ((!(widget.style.showSelected) || (_currentIndex == -1)) &&
-                  (widget.child != null)) ...[
-                Flexible(child: widget.child!),
-              ] else ...[
-                if (widget.style.showSelected)
+              // if we are to show the selected item, else show child if given
+              if (widget.style.showSelected)
+                // show selected item if one is selected
+                if (_currentIndex >= 0) ...[
                   Flexible(
-                      child: widget.items?[_currentIndex].getPreview(context) ??
-                          Container()),
+                      child: widget.items[_currentIndex].getPreview(context)),
+                ] else ...[
+                  // show child if item has not been selected and child it not null, otherwise show nothing
+                  if ((_currentIndex <= 0) && (widget.child != null))
+                    Flexible(child: widget.child!),
+                ]
+              else ...[
+                if (widget.child != null) Flexible(child: widget.child!),
               ],
+            // place icon if not hidden
             if (!widget.style.hideIcon)
               Flexible(
                 child: RotationTransition(
                   turns: _rotateIconAnimation,
-                  child: widget.icon ?? const Icon(Icons.expand_less_rounded),
+                  child: widget.icon ?? const Icon(Icons.expand_more_rounded),
                 ),
               ),
           ],
@@ -165,61 +179,29 @@ class _SDropdownMenuCascadeState<T>
                       // TODO: add a border parameter to dropdown cascade or add a shape to style and use that instead of border and border radius
                       elevation: widget.style.elevation ?? 0,
                       borderRadius: widget.style.borderRadius,
-                      color: widget.style.color ?? Colors.transparent,
+                      color: widget.style.color ??
+                          Theme.of(context).colorScheme.background,
                       child: ConstrainedBox(
+                        // TODO: to container
                         constraints: widget.style.constraints ??
                             BoxConstraints(
                               maxWidth: widget.width,
                               maxHeight: widget.height,
                             ),
                         child: SizedBox(
-                          height: widget.height,
-                          child: ListView(
-                            padding: widget.style.padding ?? EdgeInsets.zero,
-                            shrinkWrap: true,
-                            children: widget.items
-                                    ?.asMap()
-                                    .entries
-                                    .map((element) {
-                                  final SMenuItem item = element.value;
-                                  // Add a button effect if this item has a value
-                                  if (item.value == null) {
-                                    return item;
-                                  }
-                                  if (item.onPressed != null) {
-                                    return item;
-                                  }
-                                  return Material(
-                                    shape: item.style.shape ??
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                item.style.borderRadius),
-                                    color: item.style.bgColor ??
-                                        Theme.of(context).colorScheme.onPrimary,
-                                    child: InkWell(
-                                      highlightColor: item.style.accentColor,
-                                      hoverColor: item.style.accentColor,
-                                      splashColor: item.style.accentColor
-                                          ?.withOpacity(0.1),
-                                      customBorder: item.style.shape,
-                                      mouseCursor: item.style.mouseCursor,
-                                      borderRadius: item.style.borderRadius,
-                                      onTap: () {
-                                        setState(
-                                            () => _currentIndex = element.key);
-                                        if (widget.onChange != null) {
-                                          widget.onChange!(
-                                              item.value as T, element.key);
-                                        }
+                          // TODO: to container
+                          height: widget
+                              .height, // TODO: to container: padding: widget.style.padding ?? EdgeInsets.zero,
+                          child: buildMenu(onTap: (element) {
+                            // If an onTap is available, use it to call onChange
+                            setState(() => _currentIndex = element.key);
+                            if (widget.onChange != null) {
+                              widget.onChange!(
+                                  element.value.value as T, element.key);
+                            }
 
-                                        toggleMenu(close: true);
-                                      },
-                                      child: item,
-                                    ),
-                                  );
-                                }).toList() ??
-                                [Container()],
-                          ),
+                            toggleMenu(close: true);
+                          }),
                         ),
                       ),
                     ),
@@ -234,6 +216,8 @@ class _SDropdownMenuCascadeState<T>
   }
 }
 
+/// A current WIP. Uses a Hero widget to create a dropdown menu. This can be used
+/// as a popup menu.
 class SDropdownMenuMorph<T> extends SBaseDropdownMenu<T> {
   const SDropdownMenuMorph({
     required super.items,
@@ -276,9 +260,10 @@ class _SDropdownMenuMorphState<T>
           fullscreenDialog: false,
           builder: (context) {
             return SDropdownMenuPopup(
+              buildMenu: buildMenu,
               position: calcPopupPosition(renderKey.currentContext!),
               tag: key,
-              items: widget.items ?? [],
+              items: widget.items,
               style: widget.style,
               controller: widget.controller,
               header: widget.header,
@@ -330,16 +315,17 @@ class _SDropdownMenuMorphState<T>
     // TODO: prevent button from taking place of menu when closing hero anim
     return CustomHero(
         tag: key,
-        child: Container(
-          color: Colors.transparent,
+        child: SizedBox(
+          //TODO : was a container, shouldnt cause issue
           key: renderKey,
           width: widget.buttonStyle.width,
           height: widget.buttonStyle.height,
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
+              side: widget.buttonStyle.side,
               padding: widget.buttonStyle.padding ?? const EdgeInsets.all(0),
               backgroundColor: widget.buttonStyle.bgColor ??
-                  Theme.of(context).colorScheme.onPrimary,
+                  Theme.of(context).colorScheme.background,
               elevation: widget.buttonStyle.elevation,
               foregroundColor: widget.buttonStyle.accentColor,
               shape: widget.buttonStyle.shape ??
@@ -356,19 +342,26 @@ class _SDropdownMenuMorphState<T>
                   : TextDirection.ltr,
               mainAxisSize: MainAxisSize.min,
               children: [
+                // if the widget is not set to be small, place a child, otherwise go to icon
                 if (!(widget.style.isSmall))
-                  if ((!(widget.style.showSelected) || (_currentIndex == -1)) &&
-                      (widget.child != null)) ...[
-                    Flexible(child: widget.child!),
-                  ] else ...[
-                    if (widget.style.showSelected)
+                  // if we are to show the selected item, else show child if given
+                  if (widget.style.showSelected)
+                    // show selected item if one is selected
+                    if (_currentIndex >= 0) ...[
                       Flexible(
-                          child: widget.items?[_currentIndex]
-                                  .getPreview(context) ??
-                              Container()),
+                          child:
+                              widget.items[_currentIndex].getPreview(context)),
+                    ] else ...[
+                      // show child if item has not been selected and child it not null, otherwise show nothing
+                      if ((_currentIndex <= 0) && (widget.child != null))
+                        Flexible(child: widget.child!),
+                    ]
+                  else ...[
+                    if (widget.child != null) Flexible(child: widget.child!),
                   ],
                 if (!widget.style.hideIcon)
                   Flexible(
+                    // TODO: add option to disable rotation
                     child: RotationTransition(
                       turns: _rotateAnimation!,
                       child: widget.icon ?? const Icon(Icons.arrow_drop_down),

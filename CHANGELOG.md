@@ -12,7 +12,10 @@
 #### Changed
 * Renamed `SDropdownMenuAlignment` to `SDropdownMenuPosition`.
 * Renamed `SDropdownMenu` to `SBaseDropdownMenu`.
-* Changed how `SDropdownMenuCascade` and `SDropdownMenuMorph` handles items. It now only places an `InkWell` over the item if it has a `value` and the `onPressed` function is null (default). If the value is null or a function is given, the item will no longer display a preview of the item that is selected and the dropdown menu will not close when the item is clicked. The `onChange` function will not be called. This means that all functionality of the item will have to be handled by the given function.
+* Fixed bug with dropdown menu's `showSelected` where it couldn't handled a null value.
+* Fixed bug where `header` and `footer` didn't work with dropdown menus.
+* Changed how `SDropdownMenuCascade` and `SDropdownMenuMorph` handles items. It now only places an `InkWell` over the item if it is of type `SMenuItem.clickable`. If the it is, the item will display a preview of the item that is selected and the dropdown menu will close when the item is clicked. The `onChange` function will be called with the item's value.
+* Changed items `parameter` of all menus to be `required`.
 * Changed `SMenuStyle`:
     * Removed `headerAlignment`, `footerAlignment`, `size`, and `barColor`.
     * Changed `borderRadius` to non-nullable and added default value of `const BorderRadius.all(Radius.circular(15))`.
@@ -28,11 +31,12 @@
     * Renamed mainAxisAlignment to alignment.
     * Changed `borderRadius` to non-nullable and added default value of `const BorderRadius.all(Radius.circular(15))`.
     * Added `mouseCursor`.
+    * Added `side` for border.
     * Added a `copyWith` function that creates a new style object with same properties  except for properties that were provided in the function.
 * Changed `SDropdownMenuCascade`:
     * Moved `hideIcon`, `barrierColor`, `isSmall`, `showSelected`, and `leadingIcon` to `SDropdownMenuStyle`.
     * Added `height`, `width`, animation `curve`, `position`, and `builder`.
-* Changed `SDropdownMenuMorph`:
+* Changed `SDropdownMenuMorph` **(THIS IS A WIP)**:
     * Fixed bug where `showSelected` didn't work.
     * Renamed `itemStyle` to `buttonStyle`.
     * Moved `hideIcon`, `barrierColor`, `isSmall`, `showSelected`, and `leadingIcon` to `SDropdownMenuStyle`.
@@ -53,9 +57,10 @@
 * Changed the `InkWell` so that shape, borderRadius, and colors now reflect each item's style rather than the style for the dropdown menu button.
 
 #### Created
+* Created a `performanceMode` for all the menus. When turned on, the scrollable will be a `ListView`, thus enabling lazy loading. Otherwise it is a `SingleChildScrollView` which renders all items at once. If using a `builder`, this is not applicable.
 * Created `SBase` and `SBaseState` abstract classes which the `SBaseMenu` and `SBaseDropdownMenu` are derived from.
 * Created `SMenuItemType` enum for the `SMenuItem` to be able to build a widget based on the type. Useful because `SMenuItem` now has multiple constructors. Internal use only.
-* Created `SMenuItem` and `SMenuItem.label`. This works by having multiple constructors and settings variables not needed by that constructor to `null`. A new variable `SMenuItemType type` is introduced and is set by each constructor so that the build function knows how to build the widget. `preview` is introduced along with `previewWidget` function. The `preview` widget is what the user will see appear on the dropdown menu button when `showSelected = true`. If it is `null`, it uses the `build` method. `builder` was updated to include `onPressed`. WIP for `SMenuItem.switchable`, not yet available. See point #3 under *Changed* up above for more info on how `value` and `onPressed` affect the workings of a dropdown menu.
+* Created `SMenuItem`,`SMenuItem.clickable`, `SMenuItem.switchable` **(WIP)**, and `SMenuItem.label`. This works by having multiple constructors and settings variables not needed by that constructor to `null`. A new variable `SMenuItemType type` is introduced and is set by each constructor so that the build function knows how to build the widget. `preview` is introduced along with `previewWidget` function. The `preview` widget is what the user will see appear on the dropdown menu button when `showSelected = true`. If it is `null`, it uses the `build` method. WIP for `SMenuItem.switchable`, not yet available. 
 
 #### Other
 * Updated README.md, code formatting, and example code

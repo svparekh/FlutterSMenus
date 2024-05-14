@@ -17,12 +17,13 @@ import 'helper.dart';
 /// [_SSlideMenuState] (for [SSlideMenu])
 /// [_SResizableMenuState] (for [SResizableMenu])
 
+// TODO: Add builder to menus
 class SSlideMenu extends SBaseMenu {
   const SSlideMenu({
     super.key,
     super.style,
     super.controller,
-    super.items,
+    required super.items,
     super.builder,
     super.header,
     super.footer,
@@ -137,7 +138,7 @@ class _SSlideMenuState extends SBaseMenuState<SSlideMenu> {
       child: Container(
         decoration: BoxDecoration(
             color: widget.style.backgroundColor ??
-                Theme.of(context).colorScheme.onPrimary,
+                Theme.of(context).colorScheme.background,
             borderRadius: widget.style.borderRadius,
             border: widget.style.border),
         padding:
@@ -155,20 +156,7 @@ class _SSlideMenuState extends SBaseMenuState<SSlideMenu> {
                 widget.position == SMenuPosition.bottom)
             ? widget.openSize
             : null,
-        child: Column(
-          crossAxisAlignment:
-              widget.style.alignment ?? CrossAxisAlignment.center,
-          children: [
-            // Header
-            if (widget.header != null) widget.header!,
-            // Content
-            Expanded(
-              child: buildChild(),
-            ),
-            // Footer
-            if (widget.footer != null) widget.footer!,
-          ],
-        ),
+        child: buildMenu(),
       ),
     );
     // ignore: non_constant_identifier_names
@@ -251,7 +239,7 @@ class SResizableMenu extends SBaseMenu {
     super.key,
     super.style,
     super.controller,
-    super.items,
+    required super.items,
     super.builder,
     super.header,
     super.footer,
@@ -343,7 +331,7 @@ class _SResizableMenuState extends SBaseMenuState<SResizableMenu> {
             child: Container(
               decoration: BoxDecoration(
                   color: widget.style.backgroundColor ??
-                      Theme.of(context).colorScheme.onPrimary,
+                      Theme.of(context).colorScheme.background,
                   borderRadius: widget.style.borderRadius,
                   border: widget.style.border),
               padding: widget.style.padding ??
@@ -353,20 +341,7 @@ class _SResizableMenuState extends SBaseMenuState<SResizableMenu> {
                       minHeight: widget.closedSize, maxHeight: widget.openSize)
                   : BoxConstraints(
                       minWidth: widget.closedSize, maxWidth: widget.openSize)),
-              child: Column(
-                crossAxisAlignment:
-                    widget.style.alignment ?? CrossAxisAlignment.center,
-                children: [
-                  // Header
-                  if (widget.header != null) widget.header!,
-                  // Menu
-                  Expanded(
-                    child: buildChild(),
-                  ),
-                  // Footer
-                  if (widget.footer != null) widget.footer!,
-                ],
-              ),
+              child: buildMenu(),
             ),
           ),
         ),

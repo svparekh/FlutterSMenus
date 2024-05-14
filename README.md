@@ -31,7 +31,7 @@ These are the main menus included in this package. Each support custom menu item
 | SResizableMenu       | A menu that can be resized programatically or phsyically                                           |
 | SSlideMenu           | A menu that either slides in, slides in while body slides away, or body slides away to reveal menu |
 | SDropdownMenuCascade | Classic dropdown menu                                                                              |
-| SDropdownMenuMorph   | Dropdown popup menu using Hero                                                                     |
+| SDropdownMenuMorph   | Dropdown popup menu using Hero. This is a **WIP**, mostly works but there may be some glitches.    |
 
 
 # Getting started
@@ -125,6 +125,9 @@ Either ```items``` or ```builder``` must not be null
 | ```barSize```        | double?                                | 3                                 | Size of resizing bar                                                                                    |
 | ```barHoverSize```   | double?                                | 5                                 | Size of resizing bar when hovered                                                                       |
 | ```enableWrapper```   | bool                                | true                                 | If true, wraps the menu in a Flex widget with children being this menu and an Expanded widget that contains the body.                                                                       |
+| ```performanceMode```   | bool                                | false                                 | When turned on, the scrollable will be a `ListView`, thus enabling lazy loading. Otherwise it is a `SingleChildScrollView` which renders all items at once. If using a `builder`, this is not applicable |
+
+
 
 </details>
 
@@ -168,7 +171,7 @@ Either ```items``` or ```builder``` must not be null
 | ```enableGestures``` | bool?                                  | null                              | If gestures can open, close, or toggle the menu [WIP]                                                   |
 | ```isBodyMovable```  | bool                                  | true                              | Whether the body moves in the animation or not                                                          |
 | ```isMenuMovable```  | bool                                  | true                              | Whether the menu moves in the animation or not                                                          |
-
+| ```performanceMode```   | bool                                | false                                 | When turned on, the scrollable will be a `ListView`, thus enabling lazy loading. Otherwise it is a `SingleChildScrollView` which renders all items at once. If using a `builder`, this is not applicable |
 
 </details>
 
@@ -203,11 +206,14 @@ SDropdownMenuCascade(
 | ```curve``` | Curve                              | Curves.easeInOutCirc                    | The animation curve to use when animating this menu |
 | ```position``` | SDropdownMenuPosition?                              | SDropdownMenuPosition. bottomCenter                    | The location, relative to the dropdown button, that the menu will open at |
 | ```builder``` | Widget Function(BuildContext context, List<SMenuItem>? items)?                              | null                    | Builder function for custom menu |
+| ```performanceMode```   | bool                                | false                                 | When turned on, the scrollable will be a `ListView`, thus enabling lazy loading. Otherwise it is a `SingleChildScrollView` which renders all items at once. If using a `builder`, this is not applicable |
 
 </details>
 
 
 ## SDropdownMenuMorph
+
+**(THIS IS A WIP)**
 
 ```dart
 SDropdownMenuMorph(
@@ -237,6 +243,7 @@ SDropdownMenuMorph(
 | ```curve``` | Curve                              | Curves.easeInOutCirc                    | The animation curve to use when animating this menu |
 | ```position``` | SDropdownMenuPosition?                              | SDropdownMenuPosition. bottomCenter                    | The location, relative to the dropdown button, that the menu will open at |
 | ```builder``` | Widget Function(BuildContext context, List<SMenuItem>? items)?                              | null                    | Builder function for custom menu |
+| ```performanceMode```   | bool                                | false                                 | When turned on, the scrollable will be a `ListView`, thus enabling lazy loading. Otherwise it is a `SingleChildScrollView` which renders all items at once. If using a `builder`, this is not applicable |
 
 </details>
 
@@ -254,6 +261,8 @@ SMenuItem(
 )
 ```
 
+Create a custom item.
+
 <details>
 <summary>Parameters</summary>
 
@@ -261,20 +270,20 @@ SMenuItem(
 | ------------- | ----------------------- | ---------------- | -- |
 | ```child``` | Widget? | Container() | The widget that makes up the menu item |
 | ```style``` | SMenuItemStyle | SMenuItemStyle() | Color, border radius, size, padding, alignment. See ```SMenuItemStyle``` |
-| ```value``` | T? | null | Value of this item, could be ```string```, ```int```, ```double```, etc. |
 | ```builder``` | Widget Function(BuildContext context, SMenuItemStyle style, Widget? child, void Function()? onPressed)? | null | If builder is not null, then the builder function will be used to make the menu item rather than the child. A builder function has parameters context, style, and child. This function should return a widget. |
 | ```preview``` | Widget? | self | If showSelected is enabled on a dropdown menu, then this widget is shown as the selected item on the dropdown menu button |
-| ```onPressed``` | void Function()? | null | Only provide this if you know what you are doing. This allows an action to be done by the item. Note for the dropdown menus : It places an InkWell over the item if it has a value and the onPressed function is null (default). If the value is null or a function is given, the item will no longer display a preview of the item that is selected and the dropdown menu will not close when the item is clicked. The onChange function will not be called. This means that all functionality of the item will have to be handled by the given function. It would also be best to use the builder. |
 
 </details>
 <br/>
 
 ```dart
-SMenuItem.label(
+SMenuItem.clickable(
     value: 1,
     title: Text("Option 1"),
 )
 ```
+
+An items that can have a value. Useful for dropdown menus where onChanged will be updated with clicked item's value. Can use onPressed to add functionality in other menus.
 
 
 <details>
@@ -288,10 +297,58 @@ SMenuItem.label(
 | ```style``` | SMenuItemStyle | SMenuItemStyle() | Color, border radius, size, padding, etc.. See ```SMenuItemStyle``` |
 | ```value``` | T? | null | Value of this item, could be ```string```, ```int```, ```double```, etc. |
 | ```preview``` | Widget? | self | If showSelected is enabled on a dropdown menu, then this widget is shown as the selected item on the dropdown menu button |
-| ```onPressed``` | void Function()? | null | Only provide this if you know what you are doing. This allows an action to be done by the item. Note for the dropdown menus : It places an InkWell over the item if it has a value and the onPressed function is null (default). If the value is null or a function is given, the item will no longer display a preview of the item that is selected and the dropdown menu will not close when the item is clicked. The onChange function will not be called. This means that all functionality of the item will have to be handled by the given function. It would also be best to use the builder. |
+| ```onPressed``` | void Function()? | null | This allows an action to be done by the item. For dropdown menus, this is in addition to the onChange function being called. |
 
 
 </details>
+
+<br/>
+
+```dart
+SMenuItem.label(
+    title: Text("Option 1"),
+)
+```
+A customizable label. Can be any widget. Is not clickable by default.
+
+<details>
+<summary>Parameters</summary>
+
+| Parameter | Object Type | Default | Description |
+| ------------- | ----------------------- | ---------------- | -- |
+| ```title``` | Widget? | Container() | The widget that makes up the middle of the menu item |
+| ```trailing``` | Widget? | Container() | The widget that makes up the end of the menu item |
+| ```leading``` | Widget? | Container() | The widget that makes up the start of the menu item |
+| ```style``` | SMenuItemStyle | SMenuItemStyle() | Color, border radius, size, padding, etc.. See ```SMenuItemStyle``` |
+| ```preview``` | Widget? | self | If showSelected is enabled on a dropdown menu, then this widget is shown as the selected item on the dropdown menu button |
+
+
+</details>
+<br/>
+
+
+```dart
+SMenuItem.switchable(
+    value: 1,
+    title: Text("Option 1"),
+)
+```
+**(THIS IS A WIP)**
+An item that can be toggled on and off.
+
+<details>
+<summary>Parameters</summary>
+
+| Parameter | Object Type | Default | Description |
+| ------------- | ----------------------- | ---------------- | -- |
+| ```toggled``` | bool? | Container() | The current toggle state of the switch |
+| ```onToggle``` | Widget? | Container() | Function that handles a change in value |
+| ```style``` | SMenuItemStyle | SMenuItemStyle() | Color, border radius, size, padding, etc.. See ```SMenuItemStyle``` |
+| ```preview``` | Widget? | self | If showSelected is enabled on a dropdown menu, then this widget is shown as the selected item on the dropdown menu button |
+
+
+</details>
+
 
 
 ## SMenuStyle
@@ -315,7 +372,7 @@ var style2 = style.copyWith(
 | ```borderRadius``` | BorderRadius | BorderRadius.circular(15) | The amount and style of the border radius around the menu |
 | ```padding``` | EdgeInsets? | null | The padding around the menu |
 | ```border``` | BoxBorder? | null | The border to apply around the menu. |
-| ```alignment``` | CrossAxisAlignment? | null | Aligns the column that makes up the menu's  cross axis |
+| ```alignment``` | CrossAxisAlignment? | null | **(WIP)** Aligns the column that makes up the menu's  cross axis |
 | ```barrierColor``` | Color | Colors.black26 | For slide menu, the color that is the background of the screen when the menu opens. Usually is translucent so the app can still be seen. This is the same region where "clicking off" the menu will close it. Below menu but on top of menu body. |
 | ```backgroundColor``` | Color? | null | Color of the background of the menu |
 

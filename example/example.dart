@@ -87,16 +87,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   items: [
                     // The top and bottom menu items have special
-                    // borders to create a rounded rectangle look of
-                    // the dropdown. This is because the dropdown's
-                    // background color was not set (so default is
-                    // transparent). This gives the appearance that
-                    // the menu is the same size as the items it
-                    // contains. Of course, this can be achieved
-                    // by setting a background and also setting the
-                    // dropdown menu's height/width properties. In
-                    // this case, the height was not set.
-                    SMenuItem.label(
+                    // border radius to create a rounded rectangle look of
+                    // the dropdown. This is because the clickable item
+                    // has its own background.
+                    SMenuItem.clickable(
                       value: 1,
                       title: Text('First Option (1)'),
                       style: SMenuItemStyle(
@@ -106,22 +100,22 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
-                    SMenuItem.label(
+                    SMenuItem.clickable(
                       value: 2,
                       title: Text('Option 2'),
                       style: midDropdownButtonStyle,
                     ),
-                    SMenuItem.label(
+                    SMenuItem.clickable(
                       value: 3,
                       title: Text('Option 3'),
                       style: midDropdownButtonStyle,
                     ),
-                    SMenuItem.label(
+                    SMenuItem.clickable(
                       value: 4,
                       title: Text('Option 4'),
                       style: midDropdownButtonStyle,
                     ),
-                    SMenuItem.label(
+                    SMenuItem.clickable(
                       value: 5,
                       title: Text('Last Option (5)'),
                       style: SMenuItemStyle(
@@ -181,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
           int val = -1;
           // calc offset
           for (int i = 0; i < heights.length; i++) {
-            if (items![i] is SMenuItemButton) {
+            if (items[i] is SMenuItemButton) {
               val++;
             }
 
@@ -202,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: items!,
+                  children: items,
                 ),
               ),
               // This animated container is the actual indicator that shows what
@@ -230,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
             text: 'Home',
             isSelected: selectedIndex == 0,
             icon: Icons.home,
-            onPressed: () {
+            onTap: () {
               setState(() {
                 selectedIndex = 0;
               });
@@ -241,7 +235,7 @@ class _MyHomePageState extends State<MyHomePage> {
             text: 'A Page',
             isSelected: selectedIndex == 1,
             icon: Icons.file_open,
-            onPressed: () {
+            onTap: () {
               setState(() {
                 selectedIndex = 1;
               });
@@ -252,16 +246,15 @@ class _MyHomePageState extends State<MyHomePage> {
             text: 'Another Page',
             isSelected: selectedIndex == 2,
             icon: Icons.document_scanner,
-            onPressed: () {
+            onTap: () {
               setState(() {
                 selectedIndex = 2;
               });
             },
           ),
-          // Creates a literal label. Not clickable since this is not a dropdown menu.
+          // Creates a literal label. Not clickable.
           SMenuItem.label(
             key: keys[3],
-            value: 4,
             title: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: Text(
@@ -281,7 +274,7 @@ class _MyHomePageState extends State<MyHomePage> {
           items: [
             // Creates a rounded rectangle container to act as some filler
             SMenuItem(
-              builder: (context, style, child, onPressed) {
+              builder: (context, style, child) {
                 return Container(
                   height: MediaQuery.of(context).size.height / 3.5,
                   width: MediaQuery.of(context).size.width,
@@ -317,16 +310,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             icon: Icon(Icons.menu),
                             items: [
                               // The top and bottom menu items have special
-                              // borders to create a rounded rectangle look of
-                              // the dropdown. This is because the dropdown's
-                              // background color was not set (so default is
-                              // transparent). This gives the appearance that
-                              // the menu is the same size as the items it
-                              // contains. Of course, this can be achieved
-                              // by setting a background and also setting the
-                              // dropdown menu's height/width properties. In
-                              // this case, the height was not set.
-                              SMenuItem.label(
+                              // border radius to create a rounded rectangle look of
+                              // the dropdown. This is because the clickable item
+                              // has its own background.
+                              SMenuItem.clickable(
                                 value: 1,
                                 title: Text('First Option (1)'),
                                 style: SMenuItemStyle(
@@ -336,22 +323,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 ),
                               ),
-                              SMenuItem.label(
+                              SMenuItem.clickable(
                                 value: 2,
                                 title: Text('Option 2'),
                                 style: midDropdownButtonStyle,
                               ),
-                              SMenuItem.label(
+                              SMenuItem.clickable(
                                 value: 3,
                                 title: Text('Option 3'),
                                 style: midDropdownButtonStyle,
                               ),
-                              SMenuItem.label(
+                              SMenuItem.clickable(
                                 value: 4,
                                 title: Text('Option 4'),
                                 style: midDropdownButtonStyle,
                               ),
-                              SMenuItem.label(
+                              SMenuItem.clickable(
                                 value: 5,
                                 title: Text('Last Option (5)'),
                                 style: SMenuItemStyle(
@@ -442,16 +429,15 @@ class _MyHomePageState extends State<MyHomePage> {
 /// This is a custom class that extends the [SMenuItem]. All it does is create
 /// a custom widget using the child argument. This class exists to wrap certain
 /// variables, such as isSelected. This allows us to create a TextButton in place
-/// of the regular menu item. With value set to null (or onPressed not null),
-/// the dropdown menu will not place an [InkWell] over it, enabling us to click
-/// the button. In this case, we want to button to be a certain color when selected.
-/// This is a rudimentary implementation of a Menu Button.
+/// of the regular menu item. We want the button to be a certain
+/// color when selected. This is a rudimentary implementation of a Menu Button,
+/// which means it is not fully fledged out.
 ///
 /// Used in the left hand side menu in this example.
 class SMenuItemButton<T> extends SMenuItem {
   const SMenuItemButton({
     super.key,
-    super.onPressed,
+    this.onTap,
     super.style = const SMenuItemStyle(),
     required this.icon,
     this.selectedTextColor,
@@ -470,6 +456,7 @@ class SMenuItemButton<T> extends SMenuItem {
   final Color? iconColor;
   final String? text;
   final bool isSelected;
+  final void Function()? onTap;
   final void Function(bool)? onHover;
   final void Function()? onLongPress;
 
@@ -477,7 +464,6 @@ class SMenuItemButton<T> extends SMenuItem {
   Widget build(BuildContext context) {
     return SMenuItem(
       style: style,
-      onPressed: onPressed,
       child: AnimatedContainer(
         height: 45,
         margin: const EdgeInsets.only(top: 5),
@@ -492,7 +478,7 @@ class SMenuItemButton<T> extends SMenuItem {
           style: ButtonStyle(
               shape: MaterialStatePropertyAll(
                   RoundedRectangleBorder(borderRadius: style.borderRadius))),
-          onPressed: onPressed,
+          onPressed: onTap,
           onHover: onHover,
           onLongPress: onLongPress,
           child: Row(
